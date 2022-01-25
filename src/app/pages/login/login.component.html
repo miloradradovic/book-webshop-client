@@ -1,0 +1,55 @@
+<h1 class="mat-display-1;" style="text-align: center;  margin-top: 1%;">Log in</h1>
+<mat-divider></mat-divider>
+
+<div style="display: block; text-align: center; margin: 10%;">
+  <br>
+  <form (ngSubmit)="submit()" [formGroup]="form" style="display: inline-block; width: 100%">
+    <div>
+      <mat-form-field>
+        <mat-label for="username">Email:</mat-label>
+        <input [formControl]="$any(form).controls['email']" id="email" matInput name="email" placeholder="email...">
+        <mat-error *ngIf="form.controls['email'].touched && form.controls['email'].errors?.['required']">
+          Email is required!
+        </mat-error>
+        <mat-error *ngIf="form.controls['email'].errors?.['email'] && form.controls['email'].touched"> Email is invalid!
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field>
+        <mat-label for="password">Password:</mat-label>
+        <input [formControl]="$any(form).controls['password']" id="password" matInput name="password" placeholder="password..."
+               type="password">
+        <mat-error *ngIf="form.controls['password'].touched && form.controls['password'].errors?.['required']">
+          Password is required!
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div style="padding-top: 1%;">
+      <button [disabled]="!form.valid" color="accent" id="log-in-button" mat-raised-button type="submit">Log in
+      </button>
+    </div>
+  </form>
+  <div style="padding-top: 2%">
+    <h6>
+      <button (click)="createAccount()" class="accountButton" color="accent" mat-stroked-button>Haven't registered yet? Do it now!
+      </button>
+    </h6>
+  </div>
+  <ngx-spinner
+    bdColor="rgba(51,51,51,0.8)"
+    color="#fff"
+    size="medium"
+    type="ball-atom">
+  </ngx-spinner>
+</div>
+<footer class="mat-footer-cell" style="float: right; padding-right: 2%; padding-top: 2%">
+  <div>
+    <div class="copyright">
+      &copy;
+      {{data | date: 'yyyy'}}, Developed by <a style="color: cadetblue" download href="assets/cv/Milorad's%20Resume.pdf">Come</a>
+    </div>
+  </div>
+</footer>

@@ -6,6 +6,7 @@ import { NavigationUnauthenticatedComponent } from './navigation/navigation-unau
 import { NavigationComponent } from './navigation/navigation.component';
 import { TableComponent } from './table/table.component';
 import { MaterialModule } from '../material/material.module';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -19,7 +20,8 @@ import { MaterialModule } from '../material/material.module';
   ],
   imports: [
     CommonModule,
-    MaterialModule
+    MaterialModule,
+    RouterModule
   ],
   exports: [
     NavigationAdminComponent,
