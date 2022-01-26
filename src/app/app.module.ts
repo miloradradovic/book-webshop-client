@@ -7,10 +7,11 @@ import { SharedModule } from './shared/shared.module';
 import { AppRoutingModule } from './app.routing';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { MaterialModule } from './material/material.module';
 import { PagesModule } from './pages/pages.module';
+import { HttpAuthInterceptor } from './interceptor/http-auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,9 @@ import { PagesModule } from './pages/pages.module';
     MaterialModule,
     PagesModule
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS, useClass: HttpAuthInterceptor, multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

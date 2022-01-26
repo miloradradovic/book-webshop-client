@@ -47,16 +47,16 @@ export class RegisterComponent implements OnInit {
       this.form.value.phoneNumber,
       'ROLE_USER');
     console.log(registrationData);
-    this.authService.register(registrationData).subscribe(
-      result => {
-        console.log(result);
+    this.authService.register(registrationData).subscribe({
+      next: (result) => {
         this.spinnerService.hide();
         this.snackBar.open("Registration was successful! Now you can log in!", 'Ok', {duration: 5000});
         this.router.navigate(['/']);
-      },
-      error => {
+      }, 
+      error: (err) => {
         this.spinnerService.hide();
-        this.snackBar.open(error.error, 'Ok', {duration: 3000});
-      });
+        this.snackBar.open(err.error, 'Ok', {duration: 3000});
+      }
+    });
   }
 }

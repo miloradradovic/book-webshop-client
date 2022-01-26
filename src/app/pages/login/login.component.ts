@@ -38,28 +38,26 @@ export class LoginComponent implements OnInit {
   submit(): void {
     const logIn: LogInData = this.form.value;
     this.spinnerService.show();
-    this.authService.logIn(logIn).subscribe(
-      result => {
-        console.log(result);
+    this.authService.logIn(logIn).subscribe({
+      next: (result) => { 
         const jwt: JwtHelperService = new JwtHelperService();
         const info = jwt.decodeToken(result.accessToken);
-        console.log(info);
-        const loggedIn = new AuthenticatedModel(info.sub, info.role);
+        const loggedIn = new AuthenticatedModel(info.sub, info.role, result.accessToken);
         this.storageService.setStorageItem('user', JSON.stringify(loggedIn));
         this.spinnerService.hide();
         this.snackBar.open("Successfully logged in!", 'Ok', {duration: 2000});
         if (info.role === 'ROLE_USER') {
-          this.router.navigate(['/user/catalog-dashboard']);
+         this.router.navigate(['user/catalog-dashboard']);
         } else {
           this.router.navigate(['/admin/user-dashboard'])
         }
-
       },
-      error => {
+      error: (err) => {
         this.spinnerService.hide();
-        this.snackBar.open(error.error, 'Ok', {duration: 2000});
+        this.snackBar.open(err.error, 'Ok', {duration: 2000});
       }
-    );
+      
+    });
   }
 
   createAccount(): void {

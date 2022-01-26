@@ -1,0 +1,9 @@
+<div class="background" style="height: 120%;"></div>
+<h1 class="mat-display-1;" style="text-align: center;  margin-top: 1%;">Catalog</h1>
+<mat-divider></mat-divider>
+
+<div style="padding-top: 1%; padding-left: 5%;">
+    <div *ngFor="let book of booksCatalog" style="display: inline-flex; width: 15%; padding-left: 2%; padding-top: 1%;">
+        <app-catalog-item [book]="book" (bookId)="viewDetails($event)"></app-catalog-item>
+    </div>
+</div>

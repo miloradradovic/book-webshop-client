@@ -1,1 +1,23 @@
-<p>navigation-user works!</p>
+<mat-toolbar color="primary">
+
+    <a routerLink="/" style="margin-left: 1%;">
+      <mat-icon [ngStyle]="{'color':'white'}">bookmark</mat-icon>
+    </a>
+    <span style="padding-left: 2%">bookity-book</span>
+    <span class="example-spacer" style="padding-left:2%"> </span>
+    <a routerLink="/user/catalog-dashboard" style="padding-left: 1%">
+        <button color="primary" mat-flat-button style="margin-bottom: 5%">Catalog</button>
+    </a>
+    <span style="width: 90%"></span>
+
+    <a id="view-cart" routerLink="/user/cart-view" style="margin-right: 2%;">
+        <mat-icon [ngStyle]="{'color':'white'}">shopping_cart</mat-icon>
+    </a>
+    <a id="view-profile" routerLink="/handyman/profile" style="margin-right: 2%;">
+        <mat-icon [ngStyle]="{'color':'white'}">face</mat-icon>
+    </a>
+    <a routerLink="/" style="margin-left: 0.5%;">
+        <mat-icon (click)="logOutUser()" [ngStyle]="{'color':'white'}">exit_to_app</mat-icon>
+    </a>
+  
+</mat-toolbar>

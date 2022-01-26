@@ -7,6 +7,7 @@ import { NavigationComponent } from './navigation/navigation.component';
 import { TableComponent } from './table/table.component';
 import { MaterialModule } from '../material/material.module';
 import { RouterModule } from '@angular/router';
+import { CatalogItemComponent } from './catalog-item/catalog-item.component';
 
 
 
@@ -16,7 +17,8 @@ import { RouterModule } from '@angular/router';
     NavigationAdminComponent,
     NavigationUnauthenticatedComponent,
     NavigationComponent,
-    TableComponent
+    TableComponent,
+    CatalogItemComponent
   ],
   imports: [
     CommonModule,
@@ -28,7 +30,8 @@ import { RouterModule } from '@angular/router';
     NavigationComponent,
     NavigationUserComponent, 
     NavigationUnauthenticatedComponent,
-    TableComponent
+    TableComponent,
+    CatalogItemComponent
   ]
 })
 export class SharedModule { }
