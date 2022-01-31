@@ -18,6 +18,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatTreeModule} from '@angular/material/tree';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     MatStepperModule,
     MatNativeDateModule,
     MatTreeModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSlideToggleModule
   ],
   exports: [
     MatFormFieldModule,
@@ -61,7 +63,8 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     MatStepperModule,
     MatNativeDateModule,
     MatTreeModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSlideToggleModule
   ]
 })
 export class MaterialModule { }

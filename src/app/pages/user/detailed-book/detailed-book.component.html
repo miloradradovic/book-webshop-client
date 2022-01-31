@@ -6,10 +6,13 @@
       <p style="padding-top: 2%">Released in: {{book.yearReleased}}</p>
       <p style="padding-top: 2%; font-size: small;">Recap: {{book.recap}}</p>
       <p style="padding-top: 2%">Remaining in stock: {{book.inStock}}</p>
-      <p style="padding-top: 2%">Price: {{book.price}}</p>
+      <p style="padding-top: 2%">Price: {{book.price}} RSD</p>
     </div>
     <div style="float: right; padding-top: 10%; width: 50%; height: 10%">
       <form [formGroup]="form">
+        <p [hidden]="bookAmountInCart === 0">NOTE: You already have {{bookAmountInCart}} of these in your cart!
+           Check if there are enough of books in stock before adding more to your cart!
+        </p>
         <div>
             <mat-form-field>
               <mat-label for="amount">Amount:</mat-label>

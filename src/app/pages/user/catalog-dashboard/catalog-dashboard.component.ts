@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Book, BookCatalogData } from 'src/app/model/book.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CatalogService } from 'src/app/services/catalog.service';
@@ -23,7 +24,8 @@ export class CatalogDashboardComponent implements OnInit {
     private authService: AuthService,
     private snackBar: MatSnackBar,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private spinnerService: NgxSpinnerService
   ) { }
 
   ngOnInit(): void {
@@ -31,6 +33,7 @@ export class CatalogDashboardComponent implements OnInit {
   }
 
   getAllBooks(): void {
+    this.spinnerService.show();
     this.catalogService.getAllBooks().subscribe({
       next: (result) => {
         this.fetchedBooks = result;
@@ -60,8 +63,10 @@ export class CatalogDashboardComponent implements OnInit {
           forCatalog.push(new BookCatalogData(book.id, book.name, book.yearReleased, book.recap, book.inStock, book.price, genres, writers));
         });
         this.booksCatalog = forCatalog;
+        this.spinnerService.hide();
       },
       error: (err) => {
+        this.spinnerService.hide();
         if (err.error.status === 403) {
           this.snackBar.open('Your session has expired. Please log in again!', 'Ok', {duration: 2000});
           this.authService.logOut();
@@ -81,15 +86,10 @@ export class CatalogDashboardComponent implements OnInit {
       }
     })
     const dialogRef = this.dialog.open(DetailedBookComponent, {
-      width: '40%',
-      height: '45%',
+      width: '50%',
+      height: '50%',
       data: book,
     });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.getAllBooks();
-      }
-    })
   }
 
 }

@@ -7,7 +7,6 @@ import { NavigationComponent } from './navigation/navigation.component';
 import { TableComponent } from './table/table.component';
 import { MaterialModule } from '../material/material.module';
 import { RouterModule } from '@angular/router';
-import { CatalogItemComponent } from './catalog-item/catalog-item.component';
 
 
 
@@ -17,8 +16,7 @@ import { CatalogItemComponent } from './catalog-item/catalog-item.component';
     NavigationAdminComponent,
     NavigationUnauthenticatedComponent,
     NavigationComponent,
-    TableComponent,
-    CatalogItemComponent
+    TableComponent
   ],
   imports: [
     CommonModule,
@@ -30,8 +28,7 @@ import { CatalogItemComponent } from './catalog-item/catalog-item.component';
     NavigationComponent,
     NavigationUserComponent, 
     NavigationUnauthenticatedComponent,
-    TableComponent,
-    CatalogItemComponent
+    TableComponent
   ]
 })
 export class SharedModule { }

@@ -16,6 +16,7 @@ export class DetailedBookComponent implements OnInit {
   form: FormGroup;
   private fb: FormBuilder;
   book!: BookCatalogData;
+  bookAmountInCart: number = 0;
 
   constructor(
     public dialogRef: MatDialogRef<DetailedBookComponent>,
@@ -32,32 +33,61 @@ export class DetailedBookComponent implements OnInit {
 
   ngOnInit(): void {
     this.book = this.data;
+    this.checkCart();
+  }
+
+  checkCart(): void {
+    let cartItemsJson = sessionStorage.getItem('cart');
+    if (cartItemsJson) {
+      let cartItems: CartItem[] = JSON.parse(cartItemsJson);
+      cartItems.forEach(cartItem => {
+        if (cartItem.book.id === this.book.id) {
+          this.bookAmountInCart = cartItem.amount;
+        }
+      })
+    }
   }
 
   addToCart(): void {
     let cartString = sessionStorage.getItem('cart');
+    console.log(cartString);
     if (cartString) {
       let cartItems: CartItem[] = JSON.parse(cartString);
       let found: boolean = false;
+      let inStockError: boolean = false;
       cartItems.forEach((cartItem) => {
         if (cartItem.book.id === this.book.id) {
           found = true;
-          cartItem.amount = cartItem.amount + this.form.value.amount;
+          let newAmount = cartItem.amount + this.form.value.amount;
+          if (newAmount > cartItem.book.inStock) {
+            inStockError = true;
+            this.snackBar.open("The amount you are trying to order is greater than in stock!", 'Ok', {duration: 5000});
+          } else {
+            cartItem.amount = newAmount;
+            this.snackBar.open("Cart was updated!", 'Ok', {duration: 5000});
+            this.dialogRef.close();
+          }
         }
         if (!found) {
           let cartItem = new CartItem(this.book, this.form.value.amount);
           cartItems.push(cartItem);
+          sessionStorage.setItem('cart', JSON.stringify(cartItems));
+          this.snackBar.open("Cart was updated!", 'Ok', {duration: 5000});
+          this.dialogRef.close(true);
+        } else if (!inStockError) {
+          sessionStorage.setItem('cart', JSON.stringify(cartItems));
+          this.snackBar.open("Cart was updated!", 'Ok', {duration: 5000});
+          this.dialogRef.close(true);
         }
-        this.storageService.setStorageItem('cart', JSON.stringify(cartItems));
       })
     } else {
       let cartItem = new CartItem(this.book, this.form.value.amount);
       let cartItems: CartItem[] = [];
       cartItems.push(cartItem);
-      this.storageService.setStorageItem('cart', JSON.stringify(cartItems));
+      sessionStorage.setItem('cart', JSON.stringify(cartItems));
+      this.snackBar.open("Cart was updated!", 'Ok', {duration: 5000});
+      this.dialogRef.close(true);
     }
-    this.snackBar.open("Cart was updated!", 'Ok', {duration: 5000});
-    this.dialogRef.close(true);
   }
 
 }

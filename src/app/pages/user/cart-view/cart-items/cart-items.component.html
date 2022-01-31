@@ -1,0 +1,21 @@
+<div *ngFor="let cartItem of cartItems" style="padding-top: 3%;">
+    <div style="display: inline-flex;">
+        <mat-card>
+            <mat-card-title-group>
+              <mat-card-title style="font-size: medium;">{{cartItem.book.name}}</mat-card-title>
+              <mat-card-subtitle style="font-size: small;">
+                  Price: {{cartItem.book.price}}
+                </mat-card-subtitle>
+            </mat-card-title-group>
+        </mat-card>
+        <div style="display: inline-flex; margin-left: 5%;">
+            <button style="margin-right: 20%; height: 35%; margin-top: 30%;" (click)="lowerInStock(cartItem.book.id)" id="lowerInStockButton">
+                <mat-icon>remove</mat-icon>
+            </button>
+            <p style="margin-top: 35%">{{cartItem.amount}}</p>
+            <button [disabled]="cartItem.amount === cartItem.book.inStock" style="margin-left: 20%; height: 35%; margin-top: 30%" (click)="growInStock(cartItem.book.id)" id="growInStockButton">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+    </div>
+</div>
