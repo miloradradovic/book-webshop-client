@@ -6,16 +6,19 @@ import {
   HttpInterceptor
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { StorageService } from '../services/storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpAuthInterceptor implements HttpInterceptor {
 
-  constructor() {}
+  constructor(
+    private storageService: StorageService
+  ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    let user = sessionStorage.getItem('user');
+    let user = this.storageService.getStorageItem('user');
     if (user) {
       request = request.clone({
         setHeaders: {

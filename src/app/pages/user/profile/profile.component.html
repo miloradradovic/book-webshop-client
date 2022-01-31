@@ -1,0 +1,54 @@
+
+<div class="background" style="height: 91.5%;"></div>
+<div style="float: none; width: 20%; display: block; text-align: center; padding-top: 5% ;margin: auto;">
+  
+    <form (ngSubmit)="editProfile()" [formGroup]="form">
+  
+    <mat-form-field appearance="outline" style="display: block">
+        <mat-label> Email</mat-label>
+        <input [formControl]="$any(form).controls.email" id="email" matInput name="email" placeholder="email...">
+        <mat-error *ngIf="$any(form).controls.email.touched && $any(form).controls.email.errors?.email">
+        Email is invalid!
+        </mat-error>
+    </mat-form-field>
+  
+    <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
+        <mat-label> Name</mat-label>
+        <input [formControl]="$any(form).controls.name" id="name" matInput name="name" placeholder="name...">
+    </mat-form-field>
+  
+    <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
+        <mat-label> Surname</mat-label>
+        <input [formControl]="$any(form).controls.surname" id="surname" matInput name="surname" placeholder="surname...">
+    </mat-form-field>
+  
+    <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
+        <mat-label> Address</mat-label>
+        <input [formControl]="$any(form).controls.address" id="address" matInput name="address"
+                 placeholder="address...">
+    </mat-form-field>
+  
+    <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
+        <mat-label> Phone number</mat-label>
+        <input [formControl]="$any(form).controls.phoneNumber" id="phoneNumber" matInput name="phoneNumber"
+                 placeholder="phone...">
+    </mat-form-field>
+  
+    <button [disabled]="form.invalid" id="saveButton" mat-raised-button color="accent"
+            style="margin-top: 5%;float:right;" type="submit">Edit
+    </button>
+  
+    </form>
+
+    <p>
+        NOTE: If you leave field empty, we'll just assume that you want data to remain unchanged! :)
+    </p>
+  
+</div>
+  
+<ngx-spinner
+    bdColor="rgba(51,51,51,0.8)"
+    color="#fff"
+    size="medium"
+    type="ball-atom">
+</ngx-spinner>

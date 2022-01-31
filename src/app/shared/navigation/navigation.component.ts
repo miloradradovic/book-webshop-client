@@ -18,7 +18,7 @@ export class NavigationComponent implements OnInit {
 
   ngOnInit(): void {
     this.storageService.watchStorage().subscribe(() => {
-      let userString = sessionStorage.getItem('user');
+      let userString = this.storageService.getStorageItem('user');
       let user;
       if (!userString) {
         this.role = '';
@@ -28,7 +28,7 @@ export class NavigationComponent implements OnInit {
       }
     });
 
-    let userString = sessionStorage.getItem('user');
+    let userString = this.storageService.getStorageItem('user');
       let user;
       if (!userString) {
         this.role = '';

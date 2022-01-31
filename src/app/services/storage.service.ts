@@ -14,8 +14,17 @@ export class StorageService {
     return this.storageSub.asObservable();
   }
 
+  getStorageItem(key: string): string | null {
+    return sessionStorage.getItem(key);
+  }
+
   setStorageItem(key: string, data: any): void {
     sessionStorage.setItem(key, data);
+    this.storageSub.next();
+  }
+
+  removeStorageItem(key: string) {
+    sessionStorage.removeItem(key);
     this.storageSub.next();
   }
 

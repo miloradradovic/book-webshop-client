@@ -9,13 +9,13 @@ import { environment } from 'src/environments/environment';
 export class CatalogService {
 
   private headers = new HttpHeaders({'Content-Type': 'application/json'});
-  private baseRoute = environment.gatewayUrl + '/catalog-server/api/books';
+  private baseRoute = environment.gatewayUrl + '/catalog-server/api';
 
   constructor(
     private http: HttpClient
   ) { }
 
   getAllBooks(): Observable<any> {
-    return this.http.get(this.baseRoute, {headers: this.headers, responseType: 'json'});
+    return this.http.get(this.baseRoute + '/books', {headers: this.headers, responseType: 'json'});
   }
 }

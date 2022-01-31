@@ -37,7 +37,7 @@ export class CartViewComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    let cartItemsJson = sessionStorage.getItem('cart');
+    let cartItemsJson = this.storageService.getStorageItem('cart');
     if (!cartItemsJson) {
       this.snackBar.open('Your cart is empty!', 'Ok', {duration: 2000});
       this.router.navigate(['/']);
@@ -69,7 +69,7 @@ export class CartViewComponent implements OnInit {
     this.cartItems = newCartItems;
     this.generateFinalPrice();
     if (this.cartItems.length === 0) {
-      sessionStorage.removeItem('cart');
+      this.storageService.removeStorageItem('cart');
       this.snackBar.open('Your cart is empty!', 'Ok', {duration: 5000});
       this.router.navigate(['/']);
     } else {
@@ -145,7 +145,7 @@ export class CartViewComponent implements OnInit {
       next: (result) => {
         this.spinnerService.hide();
         this.snackBar.open("Order was successfully placed!", 'Ok', {duration: 5000});
-        sessionStorage.removeItem('cart');
+        this.storageService.removeStorageItem('cart');
         this.router.navigate(['/']);
       }, 
       error: (err) => {

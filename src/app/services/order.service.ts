@@ -10,7 +10,7 @@ import { CartForOrderPlacing } from '../model/cart.model';
 export class OrderService {
 
   private headers = new HttpHeaders({'Content-Type': 'application/json'});
-  private baseRoute = environment.gatewayUrl + '/order-server/api/orders';
+  private baseRoute = environment.gatewayUrl + '/order-server/api';
 
   constructor(
     private http: HttpClient
@@ -18,7 +18,7 @@ export class OrderService {
 
 
   create(cartForOrder: CartForOrderPlacing): Observable<any> {
-    return this.http.post(this.baseRoute + '/create', cartForOrder, {headers: this.headers, responseType: 'json'});
+    return this.http.post(this.baseRoute + '/orders/create', cartForOrder, {headers: this.headers, responseType: 'json'});
   }
 
 }

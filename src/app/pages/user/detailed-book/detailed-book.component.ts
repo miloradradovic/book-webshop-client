@@ -37,7 +37,7 @@ export class DetailedBookComponent implements OnInit {
   }
 
   checkCart(): void {
-    let cartItemsJson = sessionStorage.getItem('cart');
+    let cartItemsJson = this.storageService.getStorageItem('cart');
     if (cartItemsJson) {
       let cartItems: CartItem[] = JSON.parse(cartItemsJson);
       cartItems.forEach(cartItem => {
@@ -49,7 +49,7 @@ export class DetailedBookComponent implements OnInit {
   }
 
   addToCart(): void {
-    let cartString = sessionStorage.getItem('cart');
+    let cartString = this.storageService.getStorageItem('cart');
     console.log(cartString);
     if (cartString) {
       let cartItems: CartItem[] = JSON.parse(cartString);
@@ -71,11 +71,11 @@ export class DetailedBookComponent implements OnInit {
         if (!found) {
           let cartItem = new CartItem(this.book, this.form.value.amount);
           cartItems.push(cartItem);
-          sessionStorage.setItem('cart', JSON.stringify(cartItems));
+          this.storageService.setStorageItem('cart', JSON.stringify(cartItems));
           this.snackBar.open("Cart was updated!", 'Ok', {duration: 5000});
           this.dialogRef.close(true);
         } else if (!inStockError) {
-          sessionStorage.setItem('cart', JSON.stringify(cartItems));
+          this.storageService.setStorageItem('cart', JSON.stringify(cartItems));
           this.snackBar.open("Cart was updated!", 'Ok', {duration: 5000});
           this.dialogRef.close(true);
         }
@@ -84,7 +84,7 @@ export class DetailedBookComponent implements OnInit {
       let cartItem = new CartItem(this.book, this.form.value.amount);
       let cartItems: CartItem[] = [];
       cartItems.push(cartItem);
-      sessionStorage.setItem('cart', JSON.stringify(cartItems));
+      this.storageService.setStorageItem('cart', JSON.stringify(cartItems));
       this.snackBar.open("Cart was updated!", 'Ok', {duration: 5000});
       this.dialogRef.close(true);
     }
