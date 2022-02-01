@@ -21,4 +21,8 @@ export class OrderService {
     return this.http.post(this.baseRoute + '/orders/create', cartForOrder, {headers: this.headers, responseType: 'json'});
   }
 
+  getAll(): Observable<any> {
+    return this.http.get(this.baseRoute + '/orders', {headers: this.headers, responseType: 'json'});
+  }
+
 }

@@ -12,7 +12,6 @@ html {
 }
 .mat-row:hover {
   background-color: #494a49;
-  cursor: pointer;
 }
 
 .background {

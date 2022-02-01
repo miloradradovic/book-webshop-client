@@ -19,7 +19,7 @@ export class DefaultGuard implements CanActivate {
       this.router.navigate(['/user/catalog-dashboard']);
       return false;
     } else if (role === 'ROLE_ADMIN') {
-      this.router.navigate(['/admin/registration-requests']);
+      this.router.navigate(['/admin/orders-dashboard']);
       return false;
     }
     return true;

@@ -6,6 +6,6 @@
     <app-navigation-user (logOut)="logOut($event)"></app-navigation-user>
 </div>
   
-<div *ngIf="role === 'ADMIN'">
+<div *ngIf="role === 'ROLE_ADMIN'">
     <app-navigation-admin (logOut)="logOut($event)"></app-navigation-admin>
 </div>

@@ -7,7 +7,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Book, BookCatalogData } from 'src/app/model/book.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CatalogService } from 'src/app/services/catalog.service';
-import { DetailedBookComponent } from '../detailed-book/detailed-book.component';
+import { DetailedBookComponent } from './detailed-book/detailed-book.component';
 
 @Component({
   selector: 'app-catalog-dashboard',

@@ -38,6 +38,14 @@ export class AuthService {
     return this.http.put(this.baseRoute + '/users/edit/' + profile.id, profile, {headers: this.headers, responseType: 'json'});
   }
 
+  getAllUsers(): Observable<any> {
+    return this.http.get(this.baseRoute + '/users', {headers: this.headers, responseType: 'json'});
+  }
+
+  deleteUser(userId: number) {
+    return this.http.delete(this.baseRoute + '/users/' + userId, {headers: this.headers, responseType: 'json'});
+  }
+
   logOut(): void {
     this.storageService.clearStorage();
   }
