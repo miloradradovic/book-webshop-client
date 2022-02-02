@@ -32,6 +32,9 @@
             <mat-error *ngIf="$any(form).controls.name.touched && $any(form).controls.name.errors?.required">
                 Name is required!
             </mat-error>
+            <mat-error *ngIf="$any(form).controls.name.touched && $any(form).controls.name.errors?.pattern">
+                Name starts with the uppercase and can only contain letters!
+            </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
@@ -40,6 +43,9 @@
                 placeholder="surname...">
             <mat-error *ngIf="$any(form).controls.surname.touched && $any(form).controls.surname.errors?.required">
                 Surname is required!
+            </mat-error>
+            <mat-error *ngIf="$any(form).controls.surname.touched && $any(form).controls.surname.errors?.pattern">
+                Surname starts with the uppercase and can only contain letters!
             </mat-error>
         </mat-form-field>
 

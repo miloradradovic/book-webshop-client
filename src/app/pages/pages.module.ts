@@ -17,6 +17,12 @@ import { OrderedItemsComponent } from './admin/orders/orders-dashboard/ordered-i
 import { OrdersDashboardComponent } from './admin/orders/orders-dashboard/orders-dashboard.component';
 import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
 import { AddUserComponent } from './admin/users/add-user/add-user.component';
+import { BooksDashboardComponent } from './admin/books/books-dashboard/books-dashboard.component';
+import { AddBookComponent } from './admin/books/add-book/add-book.component';
+import { EditBookComponent } from './admin/books/edit-book/edit-book.component';
+import { AddWriterComponent } from './admin/writers/add-writer/add-writer.component';
+import { WritersDashboardComponent } from './admin/writers/writers-dashboard/writers-dashboard.component';
+import { EditWriterComponent } from './admin/writers/edit-writer/edit-writer.component';
 
 
 
@@ -34,7 +40,13 @@ import { AddUserComponent } from './admin/users/add-user/add-user.component';
     UsersDashboardComponent,
     OrderedItemsComponent,
     EditUserComponent,
-    AddUserComponent
+    AddUserComponent,
+    BooksDashboardComponent,
+    AddBookComponent,
+    EditBookComponent,
+    AddWriterComponent,
+    WritersDashboardComponent,
+    EditWriterComponent
   ],
   imports: [
     CommonModule,

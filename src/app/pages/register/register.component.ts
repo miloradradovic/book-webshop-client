@@ -27,8 +27,8 @@ export class RegisterComponent implements OnInit {
     this.form = this.fb.group({
       email: [null, [Validators.required, Validators.email]],
       password: [null, [Validators.required, Validators.pattern('(?=(.*[0-9]))(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}')]],
-      name: [null, [Validators.required]],
-      surname: [null, [Validators.required]],
+      name: [null, [Validators.required, Validators.pattern('[A-Z][a-z]+')]],
+      surname: [null, [Validators.required, Validators.pattern('[A-Z][a-z]+')]],
       address: [null, [Validators.required]],
       phoneNumber: [null, [Validators.required]]
     });
@@ -46,7 +46,6 @@ export class RegisterComponent implements OnInit {
       this.form.value.address,
       this.form.value.phoneNumber,
       'ROLE_USER');
-    console.log(registrationData);
     this.authService.register(registrationData).subscribe({
       next: (result) => {
         this.spinnerService.hide();

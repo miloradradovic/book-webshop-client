@@ -2,77 +2,82 @@
 <mat-divider></mat-divider>
 
 <div style="float: none; width: 20%; display: block; text-align: center; padding-top: 5% ;margin: auto;">
-  
+
     <form (ngSubmit)="register()" [formGroup]="form">
-  
-    <mat-form-field appearance="outline" style="display: block">
-        <mat-label> Email</mat-label>
-        <input [formControl]="$any(form).controls.email" id="email" matInput name="email" placeholder="email...">
-        <mat-error *ngIf="$any(form).controls.email.touched && $any(form).controls.email.errors?.required">
-        Email is required!
-        </mat-error>
-        <mat-error *ngIf="$any(form).controls.email.touched && $any(form).controls.email.errors?.email">
-        Email is invalid!
-        </mat-error>
-    </mat-form-field>
-  
-    <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
-        <mat-label> Password</mat-label>
-        <input [formControl]="$any(form).controls.password" id="password" matInput name="password" placeholder="password..."
-                type="password">
-        <mat-error *ngIf="$any(form).controls.password.touched && $any(form).controls.password.errors?.required">
-        Password is required!
-        </mat-error>
-        <mat-error *ngIf="$any(form).controls.password.touched && $any(form).controls.password.errors?.pattern">
-        Password must have at least 8 characters, which include at least one uppercase, one lowercase and one number!
-        </mat-error>
-    </mat-form-field>
-  
-    <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
-        <mat-label> Name</mat-label>
-        <input [formControl]="$any(form).controls.name" id="name" matInput name="name" placeholder="name...">
-        <mat-error *ngIf="$any(form).controls.name.touched && $any(form).controls.name.errors?.required">
-        Name is required!
-        </mat-error>
-    </mat-form-field>
-  
-    <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
-        <mat-label> Surname</mat-label>
-        <input [formControl]="$any(form).controls.surname" id="surname" matInput name="surname" placeholder="surname...">
-        <mat-error *ngIf="$any(form).controls.surname.touched && $any(form).controls.surname.errors?.required">
-        Surname is required!
-        </mat-error>
-    </mat-form-field>
-  
-    <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
-        <mat-label> Address</mat-label>
-        <input [formControl]="$any(form).controls.address" id="address" matInput name="address"
-                 placeholder="address...">
-        <mat-error *ngIf="$any(form).controls.address.touched && $any(form).controls.address.errors?.required">
-        Address is required!
-        </mat-error>
-    </mat-form-field>
-  
-    <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
-        <mat-label> Phone number</mat-label>
-        <input [formControl]="$any(form).controls.phoneNumber" id="phoneNumber" matInput name="phoneNumber"
-                 placeholder="phone...">
-        <mat-error *ngIf="form.controls['phoneNumber'].touched && form.controls['phoneNumber'].errors?.['required']">
-        Phone number is required!
-        </mat-error>
-    </mat-form-field>
-  
-    <button [disabled]="form.invalid" id="saveButton" mat-raised-button color="accent"
+
+        <mat-form-field appearance="outline" style="display: block">
+            <mat-label> Email</mat-label>
+            <input [formControl]="$any(form).controls.email" id="email" matInput name="email" placeholder="email...">
+            <mat-error *ngIf="$any(form).controls.email.touched && $any(form).controls.email.errors?.required">
+                Email is required!
+            </mat-error>
+            <mat-error *ngIf="$any(form).controls.email.touched && $any(form).controls.email.errors?.email">
+                Email is invalid!
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
+            <mat-label> Password</mat-label>
+            <input [formControl]="$any(form).controls.password" id="password" matInput name="password"
+                placeholder="password..." type="password">
+            <mat-error *ngIf="$any(form).controls.password.touched && $any(form).controls.password.errors?.required">
+                Password is required!
+            </mat-error>
+            <mat-error *ngIf="$any(form).controls.password.touched && $any(form).controls.password.errors?.pattern">
+                Password must have at least 8 characters, which include at least one uppercase, one lowercase and one
+                number!
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
+            <mat-label> Name</mat-label>
+            <input [formControl]="$any(form).controls.name" id="name" matInput name="name" placeholder="name...">
+            <mat-error *ngIf="$any(form).controls.name.touched && $any(form).controls.name.errors?.required">
+                Name is required!
+            </mat-error>
+            <mat-error *ngIf="$any(form).controls.name.touched && $any(form).controls.name.errors?.pattern">
+                Name starts with the uppercase and contains only letters!
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
+            <mat-label> Surname</mat-label>
+            <input [formControl]="$any(form).controls.surname" id="surname" matInput name="surname"
+                placeholder="surname...">
+            <mat-error *ngIf="$any(form).controls.surname.touched && $any(form).controls.surname.errors?.required">
+                Surname is required!
+            </mat-error>
+            <mat-error *ngIf="$any(form).controls.surname.touched && $any(form).controls.surname.errors?.pattern">
+                Surname starts with the uppercase and contains only letters!
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
+            <mat-label> Address</mat-label>
+            <input [formControl]="$any(form).controls.address" id="address" matInput name="address"
+                placeholder="address...">
+            <mat-error *ngIf="$any(form).controls.address.touched && $any(form).controls.address.errors?.required">
+                Address is required!
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
+            <mat-label> Phone number</mat-label>
+            <input [formControl]="$any(form).controls.phoneNumber" id="phoneNumber" matInput name="phoneNumber"
+                placeholder="phone...">
+            <mat-error
+                *ngIf="form.controls['phoneNumber'].touched && form.controls['phoneNumber'].errors?.['required']">
+                Phone number is required!
+            </mat-error>
+        </mat-form-field>
+
+        <button [disabled]="form.invalid" id="saveButton" mat-raised-button color="accent"
             style="margin-top: 5%;float:right;" type="submit">Register
-    </button>
-  
+        </button>
+
     </form>
-  
+
 </div>
-  
-<ngx-spinner
-    bdColor="rgba(51,51,51,0.8)"
-    color="#fff"
-    size="medium"
-    type="ball-atom">
+
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" color="#fff" size="medium" type="ball-atom">
 </ngx-spinner>

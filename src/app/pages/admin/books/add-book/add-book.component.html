@@ -1,0 +1,82 @@
+<div style="float: none; ; text-align: center; padding-top: 5% ;margin: auto;">
+
+    <form (ngSubmit)="add()" [formGroup]="form">
+
+        <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
+            <mat-label> Name</mat-label>
+            <input [formControl]="$any(form).controls.name" id="name" matInput name="name" placeholder="name...">
+            <mat-error *ngIf="$any(form).controls.name.touched && $any(form).controls.name.errors?.required">
+                Name is required!
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
+            <mat-label> Year of release</mat-label>
+            <input type="number" [min]="1800" [max]="2022" [formControl]="$any(form).controls.yearReleased"
+                id="yearReleased" matInput name="yearReleased" placeholder="year of release...">
+            <mat-error
+                *ngIf="$any(form).controls.yearReleased.touched && $any(form).controls.yearReleased.errors?.required">
+                Year of release is required!
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
+            <mat-label> Recap</mat-label>
+            <textarea [rows]="5" [formControl]="$any(form).controls.recap" id="recap" matInput name="recap"
+                placeholder="recap..."></textarea>
+            <mat-error *ngIf="$any(form).controls.recap.touched && $any(form).controls.recap.errors?.required">
+                Recap is required!
+            </mat-error>
+            <mat-error *ngIf="$any(form).controls.recap.touched && $any(form).controls.recap.errors?.maxLength">
+                Too long!
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
+            <mat-label> In stock</mat-label>
+            <input type="number" [min]="0" [formControl]="$any(form).controls.inStock" id="inStock" matInput
+                name="inStock" placeholder="in stock...">
+            <mat-error *ngIf="$any(form).controls.inStock.touched && $any(form).controls.inStock.errors?.required">
+                Stock value is required!
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
+            <mat-label>Price</mat-label>
+            <input type="number" [min]="0" [formControl]="$any(form).controls.price" id="price" matInput name="price"
+                placeholder="price...">
+            <mat-error *ngIf="$any(form).controls.price.touched && $any(form).controls.price.errors?.required">
+                Price is required!
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="display: block">
+            <mat-label>Genres</mat-label>
+            <mat-select [formControl]="$any(form).controls.genres" multiple>
+                <mat-option *ngFor="let genre of genres" [value]="genre.originalName">{{genre.name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="$any(form).controls.genres.touched && $any(form).controls.genres.errors?.required">
+                Genres are required!
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="display: block">
+            <mat-label>Writers</mat-label>
+            <mat-select [formControl]="$any(form).controls.writers" multiple>
+                <mat-option *ngFor="let writer of writers" [value]="writer.id">{{writer.nameSurname}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="$any(form).controls.writers.touched && $any(form).controls.writers.errors?.required">
+                Writers are required!
+            </mat-error>
+        </mat-form-field>
+
+        <button [disabled]="form.invalid" id="saveButton" mat-raised-button color="accent"
+            style="margin-top: 5%;float:right;" type="submit">Add
+        </button>
+
+    </form>
+
+</div>
+
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" color="#fff" size="medium" type="ball-atom">
+</ngx-spinner>

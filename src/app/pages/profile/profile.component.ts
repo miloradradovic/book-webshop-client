@@ -36,8 +36,8 @@ export class ProfileComponent implements OnInit {
           ),
         ],
       ],
-      name: [null, []],
-      surname: [null, []],
+      name: [null, [Validators.pattern('[A-Z][a-z]+')]],
+      surname: [null, [Validators.pattern('[A-Z][a-z]+')]],
       address: [null, []],
       phoneNumber: [null, []],
     });

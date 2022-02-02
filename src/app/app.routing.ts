@@ -13,6 +13,8 @@ import { CartViewComponent } from "./pages/user/cart-view/cart-view.component";
 import { CatalogDashboardComponent } from "./pages/user/catalog-dashboard/catalog-dashboard.component";
 import { ProfileComponent } from "./pages/profile/profile.component";
 import { UserAdminGuard } from "./guards/user-admin-guard.service";
+import { BooksDashboardComponent } from "./pages/admin/books/books-dashboard/books-dashboard.component";
+import { WritersDashboardComponent } from "./pages/admin/writers/writers-dashboard/writers-dashboard.component";
 
 const routes: Routes = [
   {
@@ -51,6 +53,16 @@ const routes: Routes = [
       {
         path: 'users-dashboard',
         component: UsersDashboardComponent,
+        canActivate: [AdminGuard]
+      },
+      {
+        path: 'books-dashboard',
+        component: BooksDashboardComponent,
+        canActivate: [AdminGuard]
+      },
+      {
+        path: 'writers-dashboard',
+        component: WritersDashboardComponent,
         canActivate: [AdminGuard]
       }
     ]
