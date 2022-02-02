@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { LogInData } from '../model/login.model';
 import { RegisterData } from '../model/register.model';
-import { UserForProfile } from '../model/user.model';
+import { User } from '../model/user.model';
 import { StorageService } from './storage.service';
 
 @Injectable({
@@ -34,8 +34,8 @@ export class AuthService {
     return this.http.get(this.baseRoute + '/users/currently-logged-in', {headers: this.headers, responseType: 'json'});
   }
 
-  editProfile(profile: UserForProfile): Observable<any> {
-    return this.http.put(this.baseRoute + '/users/edit/' + profile.id, profile, {headers: this.headers, responseType: 'json'});
+  editUser(user: User): Observable<any> {
+    return this.http.put(this.baseRoute + '/users/edit/' + user.id, user, {headers: this.headers, responseType: 'json'});
   }
 
   getAllUsers(): Observable<any> {

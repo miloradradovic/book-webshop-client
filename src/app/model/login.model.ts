@@ -9,7 +9,7 @@ export class LogInData {
 }
 
 export class AuthenticatedModel {
-    private email: string;
+    public email: string;
     private role: string;
     private token: string;
 

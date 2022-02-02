@@ -11,7 +11,8 @@ import { LoginComponent } from "./pages/login/login.component";
 import { RegisterComponent } from "./pages/register/register.component";
 import { CartViewComponent } from "./pages/user/cart-view/cart-view.component";
 import { CatalogDashboardComponent } from "./pages/user/catalog-dashboard/catalog-dashboard.component";
-import { ProfileComponent } from "./pages/user/profile/profile.component";
+import { ProfileComponent } from "./pages/profile/profile.component";
+import { UserAdminGuard } from "./guards/user-admin-guard.service";
 
 const routes: Routes = [
   {
@@ -36,11 +37,6 @@ const routes: Routes = [
         path: 'cart-view',
         component: CartViewComponent,
         canActivate: [UserGuard]
-      },
-      {
-        path: 'profile',
-        component: ProfileComponent,
-        canActivate: [UserGuard]
       }
     ]
   },
@@ -58,6 +54,11 @@ const routes: Routes = [
         canActivate: [AdminGuard]
       }
     ]
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [UserAdminGuard]
   }
 ];
 

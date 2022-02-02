@@ -3,21 +3,19 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { RegisterData } from 'src/app/model/register.model';
-import { UserForProfile } from 'src/app/model/user.model';
+import { User } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
-
   form: FormGroup;
   private fb: FormBuilder;
-  profile!: UserForProfile;
+  profile!: User;
 
   constructor(
     fb: FormBuilder,
@@ -30,10 +28,18 @@ export class ProfileComponent implements OnInit {
     this.fb = fb;
     this.form = this.fb.group({
       email: [null, [Validators.email]],
+      password: [
+        null,
+        [
+          Validators.pattern(
+            '(?=(.*[0-9]))(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}'
+          ),
+        ],
+      ],
       name: [null, []],
       surname: [null, []],
       address: [null, []],
-      phoneNumber: [null, []]
+      phoneNumber: [null, []],
     });
   }
 
@@ -50,18 +56,26 @@ export class ProfileComponent implements OnInit {
         this.form.controls['surname'].setValue(this.profile.surname);
         this.form.controls['address'].setValue(this.profile.address);
         this.form.controls['phoneNumber'].setValue(this.profile.phoneNumber);
-
       },
       error: (err) => {
-        this.snackBar.open("Something went wrong while fetching your data! You might need to log out and log in again!", 'Ok', {duration: 5000});
-      }
-    })
+        this.snackBar.open(
+          'Something went wrong while fetching your data! You might need to log out and log in again!',
+          'Ok',
+          { duration: 5000 }
+        );
+      },
+    });
   }
 
   checkFields(): boolean {
-    if (this.form.value.email === this.profile.email && this.form.value.name === this.profile.name &&
-      this.form.value.surname === this.profile.surname && this.form.value.address === this.profile.address &&
-      this.form.value.phoneNumber === this.profile.phoneNumber) {
+    if (
+      this.form.value.email === this.profile.email &&
+      !this.form.value.password &&
+      this.form.value.name === this.profile.name &&
+      this.form.value.surname === this.profile.surname &&
+      this.form.value.address === this.profile.address &&
+      this.form.value.phoneNumber === this.profile.phoneNumber
+    ) {
       return false;
     }
     return true;
@@ -76,7 +90,7 @@ export class ProfileComponent implements OnInit {
 
     if (this.form.value.email === '') {
       emptyEmail = true;
-      this.form.controls['email'].setValue(this.profile.email);    
+      this.form.controls['email'].setValue(this.profile.email);
     } else {
       this.profile.email = this.form.value.email;
     }
@@ -109,7 +123,19 @@ export class ProfileComponent implements OnInit {
       this.profile.phoneNumber = this.form.value.phoneNumber;
     }
 
-    if (emptyEmail && emptyName && emptySurname && emptyAddress && emptyPhoneNumber) {
+    if (this.form.value.password) {
+      this.profile.password = this.form.value.password;
+    } else {
+      this.profile.password = '';
+    }
+
+    if (
+      emptyEmail &&
+      emptyName &&
+      emptySurname &&
+      emptyAddress &&
+      emptyPhoneNumber
+    ) {
       return false;
     }
     return true;
@@ -118,22 +144,28 @@ export class ProfileComponent implements OnInit {
   editProfile(): void {
     this.spinnerService.show();
     if (this.checkFields() && this.fillOutEmptyFields()) {
-      this.authService.editProfile(this.profile).subscribe({
+      this.authService.editUser(this.profile).subscribe({
         next: (result) => {
           this.spinnerService.hide();
-          this.snackBar.open('Successfully updated. We would like you to log in again!', 'Ok', {duration: 5000});
+          this.snackBar.open(
+            'Successfully updated. We would like you to log in again!',
+            'Ok',
+            { duration: 5000 }
+          );
           this.authService.logOut();
           this.router.navigate(['/']);
         },
         error: (err) => {
           this.spinnerService.hide();
-          this.snackBar.open(err.error, 'Ok', {duration: 3000});
+          this.snackBar.open(err.error, 'Ok', { duration: 3000 });
           this.getCurrentlyLoggedIn();
-        }
-      })
+        },
+      });
     } else {
       this.spinnerService.hide();
-      this.snackBar.open("You haven't changed anything!", 'Ok', {duration: 3000});
+      this.snackBar.open("You haven't changed anything!", 'Ok', {
+        duration: 3000,
+      });
     }
   }
 }

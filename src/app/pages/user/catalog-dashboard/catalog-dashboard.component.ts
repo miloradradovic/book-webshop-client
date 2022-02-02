@@ -12,10 +12,9 @@ import { DetailedBookComponent } from './detailed-book/detailed-book.component';
 @Component({
   selector: 'app-catalog-dashboard',
   templateUrl: './catalog-dashboard.component.html',
-  styleUrls: ['./catalog-dashboard.component.css']
+  styleUrls: ['./catalog-dashboard.component.css'],
 })
 export class CatalogDashboardComponent implements OnInit {
-
   booksCatalog: BookCatalogData[] = [];
   fetchedBooks: Book[] = [];
 
@@ -26,7 +25,7 @@ export class CatalogDashboardComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog,
     private spinnerService: NgxSpinnerService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.getAllBooks();
@@ -59,8 +58,19 @@ export class CatalogDashboardComponent implements OnInit {
             } else {
               writers = writers + writer.name + ' ' + writer.surname + ', ';
             }
-          })
-          forCatalog.push(new BookCatalogData(book.id, book.name, book.yearReleased, book.recap, book.inStock, book.price, genres, writers));
+          });
+          forCatalog.push(
+            new BookCatalogData(
+              book.id,
+              book.name,
+              book.yearReleased,
+              book.recap,
+              book.inStock,
+              book.price,
+              genres,
+              writers
+            )
+          );
         });
         this.booksCatalog = forCatalog;
         this.spinnerService.hide();
@@ -68,13 +78,17 @@ export class CatalogDashboardComponent implements OnInit {
       error: (err) => {
         this.spinnerService.hide();
         if (err.error.status === 403) {
-          this.snackBar.open('Your session has expired. Please log in again!', 'Ok', {duration: 2000});
+          this.snackBar.open(
+            'Your session has expired. Please log in again!',
+            'Ok',
+            { duration: 2000 }
+          );
           this.authService.logOut();
           this.router.navigate(['/']);
         } else {
-          this.snackBar.open(err.error, 'Ok', {duration: 2000});
+          this.snackBar.open(err.error, 'Ok', { duration: 2000 });
         }
-      }
+      },
     });
   }
 
@@ -84,12 +98,10 @@ export class CatalogDashboardComponent implements OnInit {
       if (element.id === bookId) {
         book = element;
       }
-    })
+    });
     const dialogRef = this.dialog.open(DetailedBookComponent, {
-      width: '50%',
-      height: '50%',
+      width: '30%',
       data: book,
     });
   }
-
 }

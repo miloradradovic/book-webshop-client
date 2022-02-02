@@ -11,10 +11,12 @@ import { DetailedBookComponent } from './user/catalog-dashboard/detailed-book/de
 import { CartViewComponent } from './user/cart-view/cart-view.component';
 import { CartItemsComponent } from './user/cart-view/cart-items/cart-items.component';
 import { CatalogItemComponent } from './user/catalog-dashboard/catalog-item/catalog-item.component';
-import { ProfileComponent } from './user/profile/profile.component';
+import { ProfileComponent } from './profile/profile.component';
 import { UsersDashboardComponent } from './admin/users/users-dashboard/users-dashboard.component';
 import { OrderedItemsComponent } from './admin/orders/orders-dashboard/ordered-items/ordered-items.component';
 import { OrdersDashboardComponent } from './admin/orders/orders-dashboard/orders-dashboard.component';
+import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
+import { AddUserComponent } from './admin/users/add-user/add-user.component';
 
 
 
@@ -30,7 +32,9 @@ import { OrdersDashboardComponent } from './admin/orders/orders-dashboard/orders
     ProfileComponent,
     OrdersDashboardComponent,
     UsersDashboardComponent,
-    OrderedItemsComponent
+    OrderedItemsComponent,
+    EditUserComponent,
+    AddUserComponent
   ],
   imports: [
     CommonModule,
