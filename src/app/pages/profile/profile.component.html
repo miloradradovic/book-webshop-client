@@ -8,10 +8,10 @@
     width: 20%;
     display: block;
     text-align: center;
-    padding-top: 5%;
+    padding-top: 2%;
     margin: auto;
   ">
-    <form (ngSubmit)="editProfile()" [formGroup]="form">
+    <form (ngSubmit)="prepareEditProfile()" [formGroup]="form">
         <mat-form-field appearance="outline" style="display: block">
             <mat-label> Email</mat-label>
             <input [formControl]="$any(form).controls.email" id="email" matInput name="email" placeholder="email..." />

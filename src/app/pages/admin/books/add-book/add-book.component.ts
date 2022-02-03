@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -9,6 +9,7 @@ import { RegisterData } from 'src/app/model/register.model';
 import { Writer, WriterForSelect } from 'src/app/model/writer.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CatalogService } from 'src/app/services/catalog.service';
+import { RefreshTokenComponent } from 'src/app/shared/refresh-token/refresh-token.component';
 import { AddUserComponent } from '../../users/add-user/add-user.component';
 
 @Component({
@@ -36,7 +37,8 @@ export class AddBookComponent implements OnInit {
     private spinnerService: NgxSpinnerService,
     private snackBar: MatSnackBar,
     private catalogService: CatalogService,
-    public dialogRef: MatDialogRef<AddBookComponent>
+    public dialogRef: MatDialogRef<AddBookComponent>,
+    public dialog: MatDialog
   ) {
     this.fb = fb;
     this.form = this.fb.group({
@@ -51,6 +53,10 @@ export class AddBookComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getAllWriters();
+  }
+
+  getAllWriters(): void {
     this.catalogService.getAllWriters().subscribe({
       next: (result) => {
         let newWriters: WriterForSelect[] = [];
@@ -62,7 +68,20 @@ export class AddBookComponent implements OnInit {
         this.writers = newWriters;
       },
       error: (err) => {
-        this.snackBar.open(err.error, 'Ok', { duration: 3000 });
+        if (err.status === 403) {
+          const dialogRef = this.dialog.open(RefreshTokenComponent, {});
+          dialogRef.afterClosed().subscribe((result) => {
+            if (result === 'refreshSuccess') {
+              this.getAllWriters();
+            } else if (result === 'refreshFail') {
+              this.router.navigate(['/']);
+            } else if (result === 'logout') {
+              this.router.navigate(['/']);
+            }
+          })
+        } else {
+          this.snackBar.open(err.error, 'Ok', { duration: 3000 });
+        }
       }
     })
   }
@@ -72,7 +91,6 @@ export class AddBookComponent implements OnInit {
     const bookData: ModifyBook = new ModifyBook(-1, this.form.value.name, this.form.value.yearReleased,
       this.form.value.recap, this.form.value.inStock, this.form.value.price, this.form.value.genres,
       this.form.value.writers);
-    console.log(bookData);
 
     this.catalogService.createBook(bookData).subscribe({
       next: (result) => {
@@ -84,7 +102,20 @@ export class AddBookComponent implements OnInit {
       },
       error: (err) => {
         this.spinnerService.hide();
-        this.snackBar.open(err.error, 'Ok', { duration: 3000 });
+        if (err.status === 403) {
+          const dialogRef = this.dialog.open(RefreshTokenComponent, {});
+          dialogRef.afterClosed().subscribe((result) => {
+            if (result === 'refreshSuccess') {
+              this.add();
+            } else if (result === 'refreshFail') {
+              this.router.navigate(['/']);
+            } else if (result === 'logout') {
+              this.router.navigate(['/']);
+            }
+          })
+        } else {
+          this.snackBar.open(err.error, 'Ok', { duration: 3000 });
+        }
       },
     });
 

@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { Book } from 'src/app/model/book.model';
 import { CatalogService } from 'src/app/services/catalog.service';
+import { RefreshTokenComponent } from 'src/app/shared/refresh-token/refresh-token.component';
 import { AddBookComponent } from '../add-book/add-book.component';
 import { EditBookComponent } from '../edit-book/edit-book.component';
 
@@ -39,8 +41,9 @@ export class BooksDashboardComponent implements OnInit {
   constructor(
     private catalogService: CatalogService,
     private snackBar: MatSnackBar,
-    public dialog: MatDialog
-  ) {}
+    public dialog: MatDialog,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.getAllBooks();
@@ -77,7 +80,20 @@ export class BooksDashboardComponent implements OnInit {
         this.dataSource.data = this.books;
       },
       error: (err) => {
-        this.snackBar.open(err.error, 'Ok', { duration: 2000 });
+        if (err.status === 403) {
+          const dialogRef = this.dialog.open(RefreshTokenComponent, {});
+          dialogRef.afterClosed().subscribe((result) => {
+            if (result === 'refreshSuccess') {
+              this.getAllBooks();
+            } else if (result === 'refreshFail') {
+              this.router.navigate(['/']);
+            } else if (result === 'logout') {
+              this.router.navigate(['/']);
+            }
+          })
+        } else {
+          this.snackBar.open(err.error, 'Ok', { duration: 3000 });
+        }
       },
     });
   }
@@ -122,7 +138,20 @@ export class BooksDashboardComponent implements OnInit {
         this.getAllBooks();
       },
       error: (err) => {
-        this.snackBar.open(err.error, 'Ok', { duration: 2000 });
+        if (err.status === 403) {
+          const dialogRef = this.dialog.open(RefreshTokenComponent, {});
+          dialogRef.afterClosed().subscribe((result) => {
+            if (result === 'refreshSuccess') {
+              this.delete(bookId);
+            } else if (result === 'refreshFail') {
+              this.router.navigate(['/']);
+            } else if (result === 'logout') {
+              this.router.navigate(['/']);
+            }
+          })
+        } else {
+          this.snackBar.open(err.error, 'Ok', { duration: 3000 });
+        }
       },
     });
   }

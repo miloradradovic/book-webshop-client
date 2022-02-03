@@ -29,13 +29,13 @@ export class NavigationComponent implements OnInit {
     });
 
     let userString = this.storageService.getStorageItem('user');
-      let user;
-      if (!userString) {
-        this.role = '';
-      } else {
-        user = JSON.parse(userString);
-        this.role = user.role;
-      }
+    let user;
+    if (!userString) {
+      this.role = '';
+    } else {
+      user = JSON.parse(userString);
+      this.role = user.role;
+    }
   }
 
   logOut($event: any): void {

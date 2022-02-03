@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -9,7 +9,9 @@ import { User } from 'src/app/model/user.model';
 import { Writer, WriterForSelect } from 'src/app/model/writer.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CatalogService } from 'src/app/services/catalog.service';
+import { RefreshTokenComponent } from 'src/app/shared/refresh-token/refresh-token.component';
 import { EditUserComponent } from '../../users/edit-user/edit-user.component';
+import { EditWriterComponent } from '../../writers/edit-writer/edit-writer.component';
 
 @Component({
   selector: 'app-edit-book',
@@ -21,7 +23,6 @@ export class EditBookComponent implements OnInit {
   form: FormGroup;
   private fb: FormBuilder;
   book!: Book;
-  modifyBook: ModifyBook = new ModifyBook(1, '', 0, '', 0, 0, [], []);
   genres: any[] = [
     { originalName: 'SCI_FI', name: 'sci fi' },
     { originalName: 'ROMANTIC', name: 'romantic' },
@@ -39,6 +40,7 @@ export class EditBookComponent implements OnInit {
     private snackBar: MatSnackBar,
     private catalogService: CatalogService,
     public dialogRef: MatDialogRef<EditBookComponent>,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: Book
   ) {
     this.fb = fb;
@@ -80,89 +82,68 @@ export class EditBookComponent implements OnInit {
       this.form.value.recap === this.book.recap &&
       this.form.value.inStock === this.book.inStock &&
       this.form.value.price === this.book.price &&
-      this.form.value.genres.length === 0 && this.form.value.writers.length === 0
+      this.equalArrays(this.form.value.genres, this.book.genres) && this.equalArrays(this.form.value.writers, this.getWriterIds())
     ) {
       return false;
     }
     return true;
   }
 
-  fillOutEmptyFields(): boolean {
-    let emptyName: boolean = false;
-    let emptyYearReleased: boolean = false;
-    let emptyRecap: boolean = false;
-    let emptyInStock: boolean = false;
-    let emptyPrice: boolean = false;
-    let emptyGenres: boolean = false;
-    let emptyWriters: boolean = false;
+  getWriterIds(): number[] {
+    let writerIds: number[] = [];
+    this.book.writers.forEach(element => {
+      writerIds.push(element.id);
+    })
+    return writerIds;
+  }
+
+  equalArrays(array1: any[], array2: any[]): boolean {
+    if (array1.length === array2.length) {
+      return array1.every((element, index) => {
+        if (element === array2[index]) {
+          return true;
+        }
+
+        return false;
+      });
+    }
+
+    return false;
+  }
+
+  fillOutEmptyFields(): void {
 
     if (!this.form.value.name) {
-      emptyName = true;
-      this.modifyBook.name = this.book.name;
-    } else {
-      this.modifyBook.name = this.form.value.name;
+      this.form.controls['name'].setValue(this.book.name);
     }
 
     if (!this.form.value.yearReleased) {
-      emptyYearReleased = true;
-      this.modifyBook.yearReleased = this.book.yearReleased;
-    } else {
-      this.modifyBook.yearReleased = this.form.value.yearReleased;
+      this.form.controls['yearReleased'].setValue(this.book.yearReleased);
     }
 
     if (!this.form.value.recap) {
-      emptyRecap = true;
-      this.modifyBook.recap = this.book.recap;
-    } else {
-      this.modifyBook.recap = this.form.value.recap;
+      this.form.controls['recap'].setValue(this.book.recap);
     }
 
     if (!this.form.value.inStock) {
-      emptyInStock = true;
-      this.modifyBook.inStock = this.book.inStock;
-    } else {
-      this.modifyBook.inStock = this.form.value.inStock;
+      this.form.controls['inStock'].setValue(this.book.inStock);
     }
 
     if (!this.form.value.price) {
-      emptyPrice = true;
-      this.modifyBook.price = this.book.price;
-    } else {
-      this.modifyBook.price = this.form.value.price;
+      this.form.controls['price'].setValue(this.book.price);
     }
 
     if (this.form.value.genres.length === 0) {
-      emptyGenres = true;
-      this.modifyBook.genres = this.book.genres;
-    } else {
-      this.modifyBook.genres = this.form.value.genres;
+      this.form.controls['genres'].setValue(this.book.genres);
     }
 
     if (this.form.value.writers.length === 0) {
-      emptyWriters = true;
       let writers: number[] = [];
       this.book.writers.forEach(writer => {
         writers.push(writer.id);
       })
-      this.modifyBook.writerIds = writers;
-    } else {
-      this.modifyBook.writerIds = this.form.value.writers;
+      this.form.controls['writers'].setValue(writers);
     }
-
-    this.modifyBook.id = this.book.id;
-
-    if (
-      emptyName &&
-      emptyYearReleased &&
-      emptyRecap &&
-      emptyInStock &&
-      emptyPrice &&
-      emptyGenres &&
-      emptyWriters
-    ) {
-      return false;
-    }
-    return true;
   }
 
   getAllWriters(): void {
@@ -177,16 +158,41 @@ export class EditBookComponent implements OnInit {
         this.writers = newWriters;
       },
       error: (err) => {
-        this.snackBar.open(err.error, 'Ok', { duration: 3000 });
+        if (err.status === 403) {
+          const dialogRef = this.dialog.open(RefreshTokenComponent, {});
+          dialogRef.afterClosed().subscribe((result) => {
+            if (result === 'refreshSuccess') {
+              this.getAllWriters();
+            } else if (result === 'refreshFail') {
+              this.router.navigate(['/']);
+            } else if (result === 'logout') {
+              this.router.navigate(['/']);
+            }
+          })
+        } else {
+          this.snackBar.open(err.error, 'Ok', { duration: 3000 });
+        }
       }
     })
   }
 
-  edit(): void {
+  prepareEdit(): void {
     this.spinnerService.show();
-    if (this.checkFields() && this.fillOutEmptyFields()) {
-      console.log(this.modifyBook);
-      this.catalogService.editBook(this.modifyBook).subscribe({
+    this.fillOutEmptyFields();
+    if (this.checkFields()) {
+      this.edit();
+    } else {
+      this.spinnerService.hide();
+      this.snackBar.open("You haven't changed anything!", 'Ok', {
+        duration: 3000,
+      });
+    }
+  }
+
+  edit() {
+    this.catalogService.editBook(new ModifyBook(this.book.id, this.form.value.name, this.form.value.yearReleased,
+      this.form.value.recap, this.form.value.inStock, this.form.value.price, this.form.value.genres,
+      this.form.value.writers)).subscribe({
         next: (result) => {
           this.spinnerService.hide();
           this.snackBar.open('Book was successfully updated.', 'Ok', { duration: 3000 });
@@ -194,16 +200,23 @@ export class EditBookComponent implements OnInit {
         },
         error: (err) => {
           this.spinnerService.hide();
-          this.snackBar.open(err.error, 'Ok', { duration: 3000 });
-          this.initializeFields();
+          if (err.status === 403) {
+            const dialogRef = this.dialog.open(RefreshTokenComponent, {});
+            dialogRef.afterClosed().subscribe((result) => {
+              if (result === 'refreshSuccess') {
+                this.edit();
+              } else if (result === 'refreshFail') {
+                this.router.navigate(['/']);
+              } else if (result === 'logout') {
+                this.router.navigate(['/']);
+              }
+            })
+          } else {
+            this.snackBar.open(err.error, 'Ok', { duration: 3000 });
+            this.initializeFields();
+          }
         },
       });
-    } else {
-      this.spinnerService.hide();
-      this.snackBar.open("You haven't changed anything!", 'Ok', {
-        duration: 3000,
-      });
-    }
   }
 
 }

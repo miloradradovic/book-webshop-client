@@ -1,34 +1,38 @@
 <div class="mat-elevation-z8">
-    <table [dataSource]="dataSource" mat-table>
-      <ng-container *ngFor="let column of columnsToIterate; let i = index" matColumnDef="{{columnsToDisplay[i]}}">
-        <th *matHeaderCellDef mat-header-cell> {{columnsToDisplay[i]}} </th>
-        <td *matCellDef="let element" id="row{{element.id}}"
-            mat-cell> {{column === 'dateWhen' || column === 'publishedDate' ? (element[column] | date) : element[column]}} </td>
-      </ng-container>
+  <table [dataSource]="dataSource" mat-table>
+    <ng-container *ngFor="let column of columnsToIterate; let i = index" matColumnDef="{{columnsToDisplay[i]}}">
+      <th *matHeaderCellDef mat-header-cell> {{columnsToDisplay[i]}} </th>
+      <td *matCellDef="let element" id="row{{element.id}}" mat-cell> {{column === 'dateWhen' || column ===
+        'publishedDate' ? (element[column] | date) : element[column]}} </td>
+    </ng-container>
 
-      <ng-container matColumnDef='View ordered items'>
-        <th *matHeaderCellDef mat-header-cell> Ordered items</th>
-        <td *matCellDef="let element" mat-cell>
-          <button (click)="viewOrderedItems(element.id)" color="primary" mat-raised-button>View</button>
-        </td>
-      </ng-container>
+    <ng-container matColumnDef='View ordered items'>
+      <th *matHeaderCellDef mat-header-cell> Ordered items</th>
+      <td *matCellDef="let element" mat-cell>
+        <button (click)="viewOrderedItems(element.id)" color="primary" mat-raised-button>View</button>
+      </td>
+    </ng-container>
 
-      <ng-container matColumnDef='Edit'>
-        <th *matHeaderCellDef mat-header-cell></th>
-        <td *matCellDef="let element" mat-cell>
-          <button (click)="edit(element.id)" color="primary" mat-icon-button><mat-icon>edit</mat-icon></button>
-        </td>
-      </ng-container>
+    <ng-container matColumnDef='Edit'>
+      <th *matHeaderCellDef mat-header-cell></th>
+      <td *matCellDef="let element" mat-cell>
+        <button (click)="edit(element.id)" color="primary" mat-icon-button>
+          <mat-icon>edit</mat-icon>
+        </button>
+      </td>
+    </ng-container>
 
-      <ng-container matColumnDef='Delete'>
-        <th *matHeaderCellDef mat-header-cell></th>
-        <td *matCellDef="let element" mat-cell>
-          <button (click)="delete(element.id)" color="primary" mat-icon-button><mat-icon>delete</mat-icon></button>
-        </td>
-      </ng-container>
-  
-      <tr *matHeaderRowDef="columnsToDisplay" mat-header-row></tr>
-      <tr *matRowDef="let row; columns: columnsToDisplay;" mat-row></tr>
-    </table>
-    <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-  </div>
+    <ng-container matColumnDef='Delete'>
+      <th *matHeaderCellDef mat-header-cell></th>
+      <td *matCellDef="let element" mat-cell>
+        <button (click)="delete(element.id)" color="primary" mat-icon-button>
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr *matHeaderRowDef="columnsToDisplay" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: columnsToDisplay;" mat-row></tr>
+  </table>
+  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>

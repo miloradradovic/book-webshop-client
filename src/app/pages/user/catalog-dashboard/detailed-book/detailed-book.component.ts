@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { BookCatalogData } from 'src/app/model/book.model';
 import { Cart, CartItem } from 'src/app/model/cart.model';
 import { StorageService } from 'src/app/services/storage.service';
@@ -29,7 +30,7 @@ export class DetailedBookComponent implements OnInit {
     this.form = this.fb.group({
       amount: ['', [Validators.required, Validators.min(1)]]
     });
-   }
+  }
 
   ngOnInit(): void {
     this.book = this.data;
@@ -50,7 +51,6 @@ export class DetailedBookComponent implements OnInit {
 
   addToCart(): void {
     let cartString = this.storageService.getStorageItem('cart');
-    console.log(cartString);
     if (cartString) {
       let cartItems: CartItem[] = JSON.parse(cartString);
       let found: boolean = false;
@@ -61,10 +61,10 @@ export class DetailedBookComponent implements OnInit {
           let newAmount = cartItem.amount + this.form.value.amount;
           if (newAmount > cartItem.book.inStock) {
             inStockError = true;
-            this.snackBar.open("The amount you are trying to order is greater than in stock!", 'Ok', {duration: 5000});
+            this.snackBar.open("The amount you are trying to order is greater than in stock!", 'Ok', { duration: 5000 });
           } else {
             cartItem.amount = newAmount;
-            this.snackBar.open("Cart was updated!", 'Ok', {duration: 5000});
+            this.snackBar.open("Cart was updated!", 'Ok', { duration: 5000 });
             this.dialogRef.close();
           }
         }
@@ -72,11 +72,11 @@ export class DetailedBookComponent implements OnInit {
           let cartItem = new CartItem(this.book, this.form.value.amount);
           cartItems.push(cartItem);
           this.storageService.setStorageItem('cart', JSON.stringify(cartItems));
-          this.snackBar.open("Cart was updated!", 'Ok', {duration: 5000});
+          this.snackBar.open("Cart was updated!", 'Ok', { duration: 5000 });
           this.dialogRef.close(true);
         } else if (!inStockError) {
           this.storageService.setStorageItem('cart', JSON.stringify(cartItems));
-          this.snackBar.open("Cart was updated!", 'Ok', {duration: 5000});
+          this.snackBar.open("Cart was updated!", 'Ok', { duration: 5000 });
           this.dialogRef.close(true);
         }
       })
@@ -85,7 +85,7 @@ export class DetailedBookComponent implements OnInit {
       let cartItems: CartItem[] = [];
       cartItems.push(cartItem);
       this.storageService.setStorageItem('cart', JSON.stringify(cartItems));
-      this.snackBar.open("Cart was updated!", 'Ok', {duration: 5000});
+      this.snackBar.open("Cart was updated!", 'Ok', { duration: 5000 });
       this.dialogRef.close(true);
     }
   }

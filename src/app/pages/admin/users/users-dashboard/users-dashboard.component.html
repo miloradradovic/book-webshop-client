@@ -1,8 +1,11 @@
 <h1 class="mat-display-1;" style="text-align: center;  margin-top: 1%;">Users</h1>
-<button style="float: right;" (click)="add()" color="primary" mat-icon-button><mat-icon>add</mat-icon></button>
+<button style="float: right;" (click)="add()" color="primary" mat-icon-button>
+    <mat-icon>add</mat-icon>
+</button>
 <mat-divider></mat-divider>
 
 <div style="padding-top: 2%;">
-    <app-table (editEvent)="edit($event)" (deleteEvent)="delete($event)" [dataSource]="dataSource" [columnsToDisplay]="columnsToDisplay" [columnsToIterate]="columnsToIterate">
+    <app-table (editEvent)="edit($event)" (deleteEvent)="delete($event)" [dataSource]="dataSource"
+        [columnsToDisplay]="columnsToDisplay" [columnsToIterate]="columnsToIterate">
     </app-table>
 </div>

@@ -7,6 +7,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Book, BookCatalogData } from 'src/app/model/book.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CatalogService } from 'src/app/services/catalog.service';
+import { RefreshTokenComponent } from 'src/app/shared/refresh-token/refresh-token.component';
 import { DetailedBookComponent } from './detailed-book/detailed-book.component';
 
 @Component({
@@ -25,7 +26,7 @@ export class CatalogDashboardComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog,
     private spinnerService: NgxSpinnerService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getAllBooks();
@@ -37,7 +38,6 @@ export class CatalogDashboardComponent implements OnInit {
       next: (result) => {
         this.fetchedBooks = result;
         let forCatalog: BookCatalogData[] = [];
-        console.log(this.fetchedBooks);
         result.forEach((book: Book) => {
           let genres = '';
           let writers = '';
@@ -77,16 +77,19 @@ export class CatalogDashboardComponent implements OnInit {
       },
       error: (err) => {
         this.spinnerService.hide();
-        if (err.error.status === 403) {
-          this.snackBar.open(
-            'Your session has expired. Please log in again!',
-            'Ok',
-            { duration: 2000 }
-          );
-          this.authService.logOut();
-          this.router.navigate(['/']);
+        if (err.status === 403) {
+          const dialogRef = this.dialog.open(RefreshTokenComponent, {});
+          dialogRef.afterClosed().subscribe((result) => {
+            if (result === 'refreshSuccess') {
+              this.getAllBooks();
+            } else if (result === 'refreshFail') {
+              this.router.navigate(['/']);
+            } else if (result === 'logout') {
+              this.router.navigate(['/']);
+            }
+          })
         } else {
-          this.snackBar.open(err.error, 'Ok', { duration: 2000 });
+          this.snackBar.open(err.error, 'Ok', { duration: 3000 });
         }
       },
     });

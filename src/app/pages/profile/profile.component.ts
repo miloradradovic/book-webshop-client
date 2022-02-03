@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { User } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { RefreshTokenComponent } from 'src/app/shared/refresh-token/refresh-token.component';
 
 @Component({
   selector: 'app-profile',
@@ -23,7 +25,8 @@ export class ProfileComponent implements OnInit {
     private spinnerService: NgxSpinnerService,
     private snackBar: MatSnackBar,
     private authService: AuthService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private dialog: MatDialog
   ) {
     this.fb = fb;
     this.form = this.fb.group({
@@ -58,11 +61,25 @@ export class ProfileComponent implements OnInit {
         this.form.controls['phoneNumber'].setValue(this.profile.phoneNumber);
       },
       error: (err) => {
-        this.snackBar.open(
-          'Something went wrong while fetching your data! You might need to log out and log in again!',
-          'Ok',
-          { duration: 5000 }
-        );
+        this.spinnerService.hide();
+        if (err.status === 403) {
+          const dialogRef = this.dialog.open(RefreshTokenComponent, {});
+          dialogRef.afterClosed().subscribe((result) => {
+            if (result === 'refreshSuccess') {
+              this.getCurrentlyLoggedIn();
+            } else if (result === 'refreshFail') {
+              this.router.navigate(['/']);
+            } else if (result === 'logout') {
+              this.router.navigate(['/']);
+            }
+          })
+        } else {
+          this.snackBar.open(
+            'Something went wrong while fetching your data! You might need to log out and log in again!',
+            'Ok',
+            { duration: 5000 }
+          );
+        }
       },
     });
   }
@@ -81,70 +98,49 @@ export class ProfileComponent implements OnInit {
     return true;
   }
 
-  fillOutEmptyFields(): boolean {
-    let emptyEmail: boolean = false;
-    let emptyName: boolean = false;
-    let emptySurname: boolean = false;
-    let emptyAddress: boolean = false;
-    let emptyPhoneNumber: boolean = false;
+  fillOutEmptyFields(): void {
 
-    if (this.form.value.email === '') {
-      emptyEmail = true;
+    if (!this.form.value.email) {
       this.form.controls['email'].setValue(this.profile.email);
-    } else {
-      this.profile.email = this.form.value.email;
     }
 
-    if (this.form.value.name === '') {
-      emptyName = true;
+    if (!this.form.value.name) {
       this.form.controls['name'].setValue(this.profile.name);
-    } else {
-      this.profile.name = this.form.value.name;
     }
 
-    if (this.form.value.surname === '') {
-      emptySurname = true;
+    if (!this.form.value.surname) {
       this.form.controls['surname'].setValue(this.profile.surname);
-    } else {
-      this.profile.surname = this.form.value.surname;
     }
 
-    if (this.form.value.address === '') {
-      emptyAddress = true;
+    if (!this.form.value.address) {
       this.form.controls['address'].setValue(this.profile.address);
-    } else {
-      this.profile.address = this.form.value.address;
     }
 
-    if (this.form.value.phoneNumber === '') {
-      emptyPhoneNumber = true;
+    if (!this.form.value.phoneNumber) {
       this.form.controls['phoneNumber'].setValue(this.profile.phoneNumber);
-    } else {
-      this.profile.phoneNumber = this.form.value.phoneNumber;
     }
 
-    if (this.form.value.password) {
-      this.profile.password = this.form.value.password;
-    } else {
-      this.profile.password = '';
+    if (!this.form.value.password) {
+      this.form.controls['password'].setValue('');
     }
+  }
 
-    if (
-      emptyEmail &&
-      emptyName &&
-      emptySurname &&
-      emptyAddress &&
-      emptyPhoneNumber
-    ) {
-      return false;
+  prepareEditProfile(): void {
+    this.spinnerService.show();
+    this.fillOutEmptyFields()
+    if (this.checkFields()) {
+      this.editProfile();
+    } else {
+      this.spinnerService.hide();
+      this.snackBar.open("You haven't changed anything!", 'Ok', {
+        duration: 3000,
+      });
     }
-    return true;
   }
 
   editProfile(): void {
-    this.spinnerService.show();
-    if (this.checkFields() && this.fillOutEmptyFields()) {
-      this.authService.editUser(this.profile).subscribe({
+    this.authService.editUser(new User(this.profile.id, this.form.value.email, this.form.value.password,
+      this.form.value.name, this.form.value.surname, this.form.value.phoneNumber, this.form.value.address, this.profile.roles)).subscribe({
         next: (result) => {
           this.spinnerService.hide();
           this.snackBar.open(
@@ -157,15 +153,22 @@ export class ProfileComponent implements OnInit {
         },
         error: (err) => {
           this.spinnerService.hide();
-          this.snackBar.open(err.error, 'Ok', { duration: 3000 });
-          this.getCurrentlyLoggedIn();
+          if (err.status === 403) {
+            const dialogRef = this.dialog.open(RefreshTokenComponent, {});
+            dialogRef.afterClosed().subscribe((result) => {
+              if (result === 'refreshSuccess') {
+                this.editProfile();
+              } else if (result === 'refreshFail') {
+                this.router.navigate(['/']);
+              } else if (result === 'logout') {
+                this.router.navigate(['/']);
+              }
+            })
+          } else {
+            this.snackBar.open(err.error, 'Ok', { duration: 3000 });
+            this.getCurrentlyLoggedIn();
+          }
         },
       });
-    } else {
-      this.spinnerService.hide();
-      this.snackBar.open("You haven't changed anything!", 'Ok', {
-        duration: 3000,
-      });
-    }
   }
 }

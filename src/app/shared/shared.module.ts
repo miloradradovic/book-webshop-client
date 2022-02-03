@@ -7,6 +7,7 @@ import { NavigationComponent } from './navigation/navigation.component';
 import { TableComponent } from './table/table.component';
 import { MaterialModule } from '../material/material.module';
 import { RouterModule } from '@angular/router';
+import { RefreshTokenComponent } from './refresh-token/refresh-token.component';
 
 
 
@@ -16,7 +17,8 @@ import { RouterModule } from '@angular/router';
     NavigationAdminComponent,
     NavigationUnauthenticatedComponent,
     NavigationComponent,
-    TableComponent
+    TableComponent,
+    RefreshTokenComponent
   ],
   imports: [
     CommonModule,
@@ -26,9 +28,10 @@ import { RouterModule } from '@angular/router';
   exports: [
     NavigationAdminComponent,
     NavigationComponent,
-    NavigationUserComponent, 
+    NavigationUserComponent,
     NavigationUnauthenticatedComponent,
-    TableComponent
+    TableComponent,
+    RefreshTokenComponent
   ]
 })
 export class SharedModule { }

@@ -9,7 +9,7 @@ import { CartForOrderPlacing } from '../model/cart.model';
 })
 export class OrderService {
 
-  private headers = new HttpHeaders({'Content-Type': 'application/json'});
+  private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
   private baseRoute = environment.gatewayUrl + '/order-server/api';
 
   constructor(
@@ -18,11 +18,11 @@ export class OrderService {
 
 
   create(cartForOrder: CartForOrderPlacing): Observable<any> {
-    return this.http.post(this.baseRoute + '/orders/create', cartForOrder, {headers: this.headers, responseType: 'json'});
+    return this.http.post(this.baseRoute + '/orders/create', cartForOrder, { headers: this.headers, responseType: 'json' });
   }
 
   getAll(): Observable<any> {
-    return this.http.get(this.baseRoute + '/orders', {headers: this.headers, responseType: 'json'});
+    return this.http.get(this.baseRoute + '/orders', { headers: this.headers, responseType: 'json' });
   }
 
 }

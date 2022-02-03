@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Book, ModifyBook } from '../model/book.model';
+import { Writer } from '../model/writer.model';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +30,7 @@ export class CatalogService {
   }
 
   editBook(book: ModifyBook): Observable<any> {
-    return this.http.put(this.baseRoute + '/books/edit/' + book.id, book, {
+    return this.http.put(this.baseRoute + '/books/' + book.id, book, {
       headers: this.headers,
       responseType: 'json',
     });
@@ -47,5 +48,19 @@ export class CatalogService {
       headers: this.headers,
       responseType: 'json',
     });
+  }
+
+  createWriter(writer: Writer): Observable<any> {
+    return this.http.post(this.baseRoute + '/writers/create', writer, {
+      headers: this.headers,
+      responseType: 'json',
+    })
+  }
+
+  editWriter(writer: Writer): Observable<any> {
+    return this.http.put(this.baseRoute + '/writers/' + writer.id, writer, {
+      headers: this.headers,
+      responseType: 'json',
+    })
   }
 }

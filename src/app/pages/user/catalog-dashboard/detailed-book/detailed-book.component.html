@@ -16,35 +16,16 @@
     <div>
       <mat-form-field>
         <mat-label for="amount">Amount:</mat-label>
-        <input
-          [formControl]="$any(form).controls['amount']"
-          id="amount"
-          matInput
-          name="amount"
-          placeholder="amount..."
-          type="number"
-          [min]="0"
-          [max]="book.inStock"
-        />
+        <input [formControl]="$any(form).controls['amount']" id="amount" matInput name="amount" placeholder="amount..."
+          type="number" [min]="0" [max]="book.inStock" />
       </mat-form-field>
     </div>
     <div style="padding-top: 1%">
-      <button
-        [disabled]="!form.valid"
-        color="accent"
-        id="add-to-cart-button"
-        mat-raised-button
-        (click)="addToCart()"
-      >
+      <button [disabled]="!form.valid" color="accent" id="add-to-cart-button" mat-raised-button (click)="addToCart()">
         Add to cart
       </button>
     </div>
   </form>
 </div>
-<ngx-spinner
-  bdColor="rgba(51,51,51,0.8)"
-  color="#fff"
-  size="medium"
-  type="ball-atom"
->
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" color="#fff" size="medium" type="ball-atom">
 </ngx-spinner>

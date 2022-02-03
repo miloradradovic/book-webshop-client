@@ -34,7 +34,7 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   register(): void {
     this.spinnerService.show();
@@ -49,12 +49,12 @@ export class RegisterComponent implements OnInit {
     this.authService.register(registrationData).subscribe({
       next: (result) => {
         this.spinnerService.hide();
-        this.snackBar.open("Registration was successful! Now you can log in!", 'Ok', {duration: 5000});
+        this.snackBar.open("Registration was successful! Now you can log in!", 'Ok', { duration: 5000 });
         this.router.navigate(['/']);
-      }, 
+      },
       error: (err) => {
         this.spinnerService.hide();
-        this.snackBar.open(err.error, 'Ok', {duration: 3000});
+        this.snackBar.open(err.error, 'Ok', { duration: 3000 });
       }
     });
   }

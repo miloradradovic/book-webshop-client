@@ -1,5 +1,5 @@
 export class OrderedItem {
-    
+
     public id: number;
     public name: string;
     public amount: number;
@@ -23,13 +23,13 @@ export class Order {
     public phoneNumber: string;
     public finalPrice: number;
 
-    constructor(id: number, orderedItems: OrderedItem[], orderStatus: string, address: string, 
+    constructor(id: number, orderedItems: OrderedItem[], orderStatus: string, address: string,
         phoneNumber: string, finalPrice: number) {
-            this.id = id;
-            this.orderedItems = orderedItems;
-            this.orderStatus = orderStatus;
-            this.address = address;
-            this.phoneNumber = phoneNumber;
-            this.finalPrice = finalPrice;
-        }
+        this.id = id;
+        this.orderedItems = orderedItems;
+        this.orderStatus = orderStatus;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.finalPrice = finalPrice;
+    }
 }

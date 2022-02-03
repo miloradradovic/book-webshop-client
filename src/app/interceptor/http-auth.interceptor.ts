@@ -15,7 +15,7 @@ export class HttpAuthInterceptor implements HttpInterceptor {
 
   constructor(
     private storageService: StorageService
-  ) {}
+  ) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     let user = this.storageService.getStorageItem('user');

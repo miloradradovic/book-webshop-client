@@ -33,30 +33,30 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   submit(): void {
     const logIn: LogInData = this.form.value;
     this.spinnerService.show();
     this.authService.logIn(logIn).subscribe({
-      next: (result) => { 
+      next: (result) => {
         const jwt: JwtHelperService = new JwtHelperService();
         const info = jwt.decodeToken(result.accessToken);
-        const loggedIn = new AuthenticatedModel(info.sub, info.role, result.accessToken);
+        const loggedIn = new AuthenticatedModel(info.sub, info.role, result.accessToken, result.refreshToken);
         this.storageService.setStorageItem('user', JSON.stringify(loggedIn));
         this.spinnerService.hide();
-        this.snackBar.open("Successfully logged in!", 'Ok', {duration: 2000});
+        this.snackBar.open("Successfully logged in!", 'Ok', { duration: 2000 });
         if (info.role === 'ROLE_USER') {
-         this.router.navigate(['user/catalog-dashboard']);
+          this.router.navigate(['user/catalog-dashboard']);
         } else {
           this.router.navigate(['/admin/orders-dashboard'])
         }
       },
       error: (err) => {
         this.spinnerService.hide();
-        this.snackBar.open(err.error, 'Ok', {duration: 2000});
+        this.snackBar.open(err.error, 'Ok', { duration: 2000 });
       }
-      
+
     });
   }
 

@@ -1,1 +1,40 @@
-<p>edit-writer works!</p>
+<div style="float: none; ; text-align: center; padding-top: 5% ;margin: auto;">
+
+    <form (ngSubmit)="prepareEdit()" [formGroup]="form">
+
+        <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
+            <mat-label> Name</mat-label>
+            <input [formControl]="$any(form).controls.name" id="name" matInput name="name" placeholder="name...">
+            <mat-error *ngIf="$any(form).controls.name.touched && $any(form).controls.name.errors?.pattern">
+                Name starts with the uppercase and can only contain letters!
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
+            <mat-label> Surname</mat-label>
+            <input [formControl]="$any(form).controls.surname" id="surname" matInput name="surname"
+                placeholder="surname...">
+            <mat-error *ngIf="$any(form).controls.surname.touched && $any(form).controls.surname.errors?.pattern">
+                Surname starts with the uppercase and can only contain letters!
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="display: block; padding-top: 3%;">
+            <mat-label> Biography</mat-label>
+            <textarea [rows]="5" [formControl]="$any(form).controls.biography" id="biography" matInput name="biography"
+                placeholder="biography..."></textarea>
+            <mat-error *ngIf="$any(form).controls.biography.touched && $any(form).controls.biography.errors?.maxLength">
+                Too long!
+            </mat-error>
+        </mat-form-field>
+
+        <button [disabled]="form.invalid" id="saveButton" mat-raised-button color="accent"
+            style="margin-top: 5%;float:right;" type="submit">Edit
+        </button>
+
+    </form>
+
+</div>
+
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" color="#fff" size="medium" type="ball-atom">
+</ngx-spinner>

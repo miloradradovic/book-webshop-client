@@ -1,12 +1,14 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CartForOrderPlacing, CartItem, CartItemForOrderPlacing } from 'src/app/model/cart.model';
 import { OrderService } from 'src/app/services/order.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { RefreshTokenComponent } from 'src/app/shared/refresh-token/refresh-token.component';
 
 @Component({
   selector: 'app-cart-view',
@@ -27,19 +29,20 @@ export class CartViewComponent implements OnInit {
     private spinnerService: NgxSpinnerService,
     fb: FormBuilder,
     private storageService: StorageService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private dialog: MatDialog
   ) {
     this.fb = fb;
     this.form = this.fb.group({
       address: [null, [Validators.required]],
       phoneNumber: [null, [Validators.required]]
     });
-   }
+  }
 
   ngOnInit(): void {
     let cartItemsJson = this.storageService.getStorageItem('cart');
     if (!cartItemsJson) {
-      this.snackBar.open('Your cart is empty!', 'Ok', {duration: 2000});
+      this.snackBar.open('Your cart is empty!', 'Ok', { duration: 2000 });
       this.router.navigate(['/']);
     } else {
       this.cartItems = JSON.parse(cartItemsJson);
@@ -70,7 +73,7 @@ export class CartViewComponent implements OnInit {
     this.generateFinalPrice();
     if (this.cartItems.length === 0) {
       this.storageService.removeStorageItem('cart');
-      this.snackBar.open('Your cart is empty!', 'Ok', {duration: 5000});
+      this.snackBar.open('Your cart is empty!', 'Ok', { duration: 5000 });
       this.router.navigate(['/']);
     } else {
       this.storageService.setStorageItem('cart', JSON.stringify(this.cartItems));
@@ -104,7 +107,7 @@ export class CartViewComponent implements OnInit {
       let itemPrice = this.calculateItemPrice(cartItem.amount, cartItem.book.price);
       this.finalPrice = this.finalPrice + itemPrice;
     })
-    this.finalPrice = Math.round(this.finalPrice * 100)/100
+    this.finalPrice = Math.round(this.finalPrice * 100) / 100
   }
 
   calculateItemPrice(amount: number, price: number): number {
@@ -140,17 +143,29 @@ export class CartViewComponent implements OnInit {
       this.form.value.phoneNumber,
       this.finalPrice
     );
-    console.log(cartForOrder);
     this.orderService.create(cartForOrder).subscribe({
       next: (result) => {
         this.spinnerService.hide();
-        this.snackBar.open("Order was successfully placed!", 'Ok', {duration: 5000});
+        this.snackBar.open("Order was successfully placed!", 'Ok', { duration: 5000 });
         this.storageService.removeStorageItem('cart');
         this.router.navigate(['/']);
-      }, 
+      },
       error: (err) => {
         this.spinnerService.hide();
-        this.snackBar.open(err.error, 'Ok', {duration: 3000});
+        if (err.status === 403) {
+          const dialogRef = this.dialog.open(RefreshTokenComponent, {});
+          dialogRef.afterClosed().subscribe((result) => {
+            if (result === 'refreshSuccess') {
+              this.placeOrder();
+            } else if (result === 'refreshFail') {
+              this.router.navigate(['/']);
+            } else if (result === 'logout') {
+              this.router.navigate(['/']);
+            }
+          })
+        } else {
+          this.snackBar.open(err.error, 'Ok', { duration: 3000 });
+        }
       }
     });
   }
