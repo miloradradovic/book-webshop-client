@@ -1,0 +1,7 @@
+<div [hidden]="photo ===''" appearance="outline" style="display: block">
+    <img [src]=photo class="picture"
+        style="max-width:400px;max-height:200px;" />
+</div>
+<div appearance="outline" style="display: block">
+    <input accept="image/*" #fileInput type="file" id="customFile" (change)="selectFile($event)">
+</div>

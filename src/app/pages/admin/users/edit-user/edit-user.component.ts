@@ -6,7 +6,6 @@ import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { User } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
-import { StorageService } from 'src/app/services/storage.service';
 import { RefreshTokenComponent } from 'src/app/shared/refresh-token/refresh-token.component';
 
 @Component({

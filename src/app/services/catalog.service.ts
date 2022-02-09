@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Book, ModifyBook } from '../model/book.model';
+import { ModifyBook } from '../model/book.model';
 import { Writer } from '../model/writer.model';
 
 @Injectable({
@@ -38,6 +38,13 @@ export class CatalogService {
 
   deleteBook(bookId: number): Observable<any> {
     return this.http.delete(this.baseRoute + '/books/' + bookId, {
+      headers: this.headers,
+      responseType: 'json',
+    });
+  }
+
+  deleteBookByName(name: string): Observable<any> {
+    return this.http.delete(this.baseRoute + '/books/by-name/' + name, {
       headers: this.headers,
       responseType: 'json',
     });

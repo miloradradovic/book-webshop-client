@@ -9,6 +9,7 @@ export class BookCatalogData {
   public price: number;
   public genres: string;
   public writers: string;
+  public photo!: string;
 
   constructor(id: number, name: string, yearReleased: number, recap: string, inStock: number, price: number, genres: string,
     writers: string) {

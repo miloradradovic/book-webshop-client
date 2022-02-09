@@ -19,7 +19,7 @@ export class HttpAuthInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     let user = this.storageService.getStorageItem('user');
-    if (user) {
+    if (user && !request.url.includes('api/photos')) {
       request = request.clone({
         setHeaders: {
           Authorization: 'Bearer ' + JSON.parse(user).token

@@ -1,17 +1,14 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Book, ModifyBook } from 'src/app/model/book.model';
-import { User } from 'src/app/model/user.model';
 import { Writer, WriterForSelect } from 'src/app/model/writer.model';
-import { AuthService } from 'src/app/services/auth.service';
 import { CatalogService } from 'src/app/services/catalog.service';
+import { PhotoService } from 'src/app/services/photo.service';
 import { RefreshTokenComponent } from 'src/app/shared/refresh-token/refresh-token.component';
-import { EditUserComponent } from '../../users/edit-user/edit-user.component';
-import { EditWriterComponent } from '../../writers/edit-writer/edit-writer.component';
 
 @Component({
   selector: 'app-edit-book',
@@ -41,7 +38,8 @@ export class EditBookComponent implements OnInit {
     private catalogService: CatalogService,
     public dialogRef: MatDialogRef<EditBookComponent>,
     private dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: Book
+    @Inject(MAT_DIALOG_DATA) public data: Book,
+    private photoService: PhotoService
   ) {
     this.fb = fb;
     this.form = this.fb.group({
@@ -54,6 +52,11 @@ export class EditBookComponent implements OnInit {
       writers: [[], []]
     });
   }
+
+  @ViewChild('fileInput') fileInput!: ElementRef;
+
+  selectedFile!: File;
+  photo: string = '';
 
   ngOnInit(): void {
     this.getAllWriters();
@@ -73,6 +76,24 @@ export class EditBookComponent implements OnInit {
       writers.push(writer.id);
     })
     this.form.controls['writers'].setValue(writers);
+    this.getPhotoByName(this.book.name);
+  }
+
+  getPhotoByName(name: string) {
+    this.photoService.getByName(name).subscribe({
+      next: (result) => {
+        if (result.name) {
+          this.photo = 'data:image/png;base64,' + result.name;
+        }
+      },
+      error: (err) => {
+        this.snackBar.open(err.error, 'Ok', { duration: 3000 });
+      }
+    })
+  }
+
+  selectedFileEvent(event: File) {
+    this.selectedFile = event;
   }
 
   checkFields(): boolean {
@@ -82,7 +103,8 @@ export class EditBookComponent implements OnInit {
       this.form.value.recap === this.book.recap &&
       this.form.value.inStock === this.book.inStock &&
       this.form.value.price === this.book.price &&
-      this.equalArrays(this.form.value.genres, this.book.genres) && this.equalArrays(this.form.value.writers, this.getWriterIds())
+      this.equalArrays(this.form.value.genres, this.book.genres) && this.equalArrays(this.form.value.writers, this.getWriterIds()) &&
+      !this.selectedFile
     ) {
       return false;
     }
@@ -189,14 +211,33 @@ export class EditBookComponent implements OnInit {
     }
   }
 
+  upload() {
+    if (!this.selectedFile) {
+      this.spinnerService.hide();
+      this.snackBar.open('Book was successfully edited!', 'Ok', { duration: 3000 });
+      this.dialogRef.close(true);
+    } else {
+      this.photoService.upload(this.selectedFile, this.form.value.name).subscribe({
+        next: (result) => {
+          this.spinnerService.hide();
+          this.snackBar.open('Book was successfully edited!', 'Ok', { duration: 3000 });
+          this.dialogRef.close(true);
+        },
+        error: (err) => {
+          this.spinnerService.hide();
+          this.snackBar.open('Something went wrong while uploading the photo. Please try again later!', 'Ok', { duration: 3000 });
+          this.undoBookChanges();
+        }
+      })
+    }
+  }
+
   edit() {
     this.catalogService.editBook(new ModifyBook(this.book.id, this.form.value.name, this.form.value.yearReleased,
       this.form.value.recap, this.form.value.inStock, this.form.value.price, this.form.value.genres,
       this.form.value.writers)).subscribe({
         next: (result) => {
-          this.spinnerService.hide();
-          this.snackBar.open('Book was successfully updated.', 'Ok', { duration: 3000 });
-          this.dialogRef.close(true);
+          this.upload();
         },
         error: (err) => {
           this.spinnerService.hide();
@@ -206,8 +247,10 @@ export class EditBookComponent implements OnInit {
               if (result === 'refreshSuccess') {
                 this.edit();
               } else if (result === 'refreshFail') {
+                this.deletePhoto();
                 this.router.navigate(['/']);
               } else if (result === 'logout') {
+                this.deletePhoto();
                 this.router.navigate(['/']);
               }
             })
@@ -217,6 +260,47 @@ export class EditBookComponent implements OnInit {
           }
         },
       });
+  }
+
+  convertWritersToWriterIds(writers: Writer[]): number[] {
+    let writerIds: number[] = []
+    writers.forEach(element => {
+      writerIds.push(element.id);
+    })
+    return writerIds;
+  }
+
+  undoBookChanges(): void {
+    this.catalogService.editBook(new ModifyBook(this.book.id, this.book.name, this.book.yearReleased,
+      this.book.recap, this.book.inStock, this.book.price, this.book.genres,
+      this.convertWritersToWriterIds(this.book.writers))).subscribe({
+        error: (err) => {
+          if (err.status === 403) {
+            const dialogRef = this.dialog.open(RefreshTokenComponent, {});
+            dialogRef.afterClosed().subscribe((result) => {
+              if (result === 'refreshSuccess') {
+                this.undoBookChanges();
+              } else if (result === 'refreshFail') {
+                this.router.navigate(['/']);
+              } else if (result === 'logout') {
+                this.router.navigate(['/']);
+              }
+            })
+          } else {
+            this.snackBar.open(err.error, 'Ok', { duration: 3000 });
+          }
+        },
+      });
+  }
+
+  deletePhoto(): void {
+    if (this.selectedFile) {
+      this.photoService.delete(this.book.name).subscribe({
+        error: (err) => {
+          this.snackBar.open(err.error, 'Ok', { duration: 3000 });
+        }
+      })
+    }
   }
 
 }

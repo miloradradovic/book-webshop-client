@@ -8,6 +8,7 @@ import { TableComponent } from './table/table.component';
 import { MaterialModule } from '../material/material.module';
 import { RouterModule } from '@angular/router';
 import { RefreshTokenComponent } from './refresh-token/refresh-token.component';
+import { PhotoManagementComponent } from './photo-management/photo-management.component';
 
 
 
@@ -18,7 +19,8 @@ import { RefreshTokenComponent } from './refresh-token/refresh-token.component';
     NavigationUnauthenticatedComponent,
     NavigationComponent,
     TableComponent,
-    RefreshTokenComponent
+    RefreshTokenComponent,
+    PhotoManagementComponent
   ],
   imports: [
     CommonModule,
@@ -31,7 +33,8 @@ import { RefreshTokenComponent } from './refresh-token/refresh-token.component';
     NavigationUserComponent,
     NavigationUnauthenticatedComponent,
     TableComponent,
-    RefreshTokenComponent
+    RefreshTokenComponent,
+    PhotoManagementComponent
   ]
 })
 export class SharedModule { }

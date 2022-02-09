@@ -8,7 +8,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { OrderedItemsComponent } from './ordered-items/ordered-items.component';
 import { RefreshTokenComponent } from 'src/app/shared/refresh-token/refresh-token.component';
-import { getLocaleExtraDayPeriods } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({

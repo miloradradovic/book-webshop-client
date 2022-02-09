@@ -2,9 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 import { BookCatalogData } from 'src/app/model/book.model';
-import { Cart, CartItem } from 'src/app/model/cart.model';
+import { CartItem } from 'src/app/model/cart.model';
 import { StorageService } from 'src/app/services/storage.service';
 
 @Component({

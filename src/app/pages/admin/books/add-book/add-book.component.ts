@@ -1,16 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ModifyBook } from 'src/app/model/book.model';
-import { RegisterData } from 'src/app/model/register.model';
 import { Writer, WriterForSelect } from 'src/app/model/writer.model';
-import { AuthService } from 'src/app/services/auth.service';
 import { CatalogService } from 'src/app/services/catalog.service';
+import { PhotoService } from 'src/app/services/photo.service';
 import { RefreshTokenComponent } from 'src/app/shared/refresh-token/refresh-token.component';
-import { AddUserComponent } from '../../users/add-user/add-user.component';
 
 @Component({
   selector: 'app-add-book',
@@ -29,6 +27,10 @@ export class AddBookComponent implements OnInit {
     { originalName: 'SCIENCE', name: 'science' },
   ];
 
+  @ViewChild('fileInput') fileInput!: ElementRef;
+
+  selectedFile!: File;
+
   writers: WriterForSelect[] = [];
 
   constructor(
@@ -38,7 +40,8 @@ export class AddBookComponent implements OnInit {
     private snackBar: MatSnackBar,
     private catalogService: CatalogService,
     public dialogRef: MatDialogRef<AddBookComponent>,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private photoService: PhotoService
   ) {
     this.fb = fb;
     this.form = this.fb.group({
@@ -88,17 +91,17 @@ export class AddBookComponent implements OnInit {
 
   add(): void {
     this.spinnerService.show();
+    this.createBook();
+  }
+
+  createBook(): void {
     const bookData: ModifyBook = new ModifyBook(-1, this.form.value.name, this.form.value.yearReleased,
       this.form.value.recap, this.form.value.inStock, this.form.value.price, this.form.value.genres,
       this.form.value.writers);
 
     this.catalogService.createBook(bookData).subscribe({
       next: (result) => {
-        this.spinnerService.hide();
-        this.snackBar.open('Book was successfully created!', 'Ok', {
-          duration: 5000,
-        });
-        this.dialogRef.close(true);
+        this.upload();
       },
       error: (err) => {
         this.spinnerService.hide();
@@ -106,7 +109,7 @@ export class AddBookComponent implements OnInit {
           const dialogRef = this.dialog.open(RefreshTokenComponent, {});
           dialogRef.afterClosed().subscribe((result) => {
             if (result === 'refreshSuccess') {
-              this.add();
+              this.createBook();
             } else if (result === 'refreshFail') {
               this.router.navigate(['/']);
             } else if (result === 'logout') {
@@ -118,6 +121,42 @@ export class AddBookComponent implements OnInit {
         }
       },
     });
+  }
 
+  upload(): void {
+    this.photoService.upload(this.selectedFile, this.form.value.name).subscribe({
+      next: (result) => {
+        this.spinnerService.hide();
+        this.snackBar.open('Book was successfully created!', 'Ok', {
+          duration: 3000,
+        });
+        this.dialogRef.close(true);
+      },
+      error: (err) => {
+        this.spinnerService.hide();
+        this.snackBar.open('Something went wrong while uploading your photo. Please try again later!', 'Ok', { duration: 3000 });
+        this.deleteBook();
+      }
+    })
+  }
+
+  deletePhoto(): void {
+    this.photoService.delete(this.form.value.name).subscribe({
+      error: (err) => {
+        this.snackBar.open(err.error, 'Ok', { duration: 3000 });
+      }
+    })
+  }
+
+  selectedFileEvent(event: File) {
+    this.selectedFile = event;
+  }
+
+  deleteBook(): void {
+    this.catalogService.deleteBookByName(this.form.value.name).subscribe({
+      error: (err) => {
+        this.snackBar.open(err.error, 'Ok', { duration: 3000 });
+      }
+    });
   }
 }

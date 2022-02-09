@@ -1,14 +1,12 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { RegisterData } from 'src/app/model/register.model';
-import { User } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { RefreshTokenComponent } from 'src/app/shared/refresh-token/refresh-token.component';
-import { EditUserComponent } from '../edit-user/edit-user.component';
 
 @Component({
   selector: 'app-add-user',

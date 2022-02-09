@@ -99,7 +99,9 @@ export class BooksDashboardComponent implements OnInit {
   }
 
   add() {
-    const dialogRef = this.dialog.open(AddBookComponent, {});
+    const dialogRef = this.dialog.open(AddBookComponent, {
+      width: '60%'
+    });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
@@ -118,7 +120,7 @@ export class BooksDashboardComponent implements OnInit {
     });
 
     const dialogRef = this.dialog.open(EditBookComponent, {
-      width: '30%',
+      width: '60%',
       data: book,
     });
 

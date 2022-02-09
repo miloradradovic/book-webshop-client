@@ -71,17 +71,22 @@ const routes: Routes = [
     path: 'profile',
     component: ProfileComponent,
     canActivate: [UserAdminGuard]
+  },
+  {
+    path: '**',
+    component: LoginComponent,
+    canActivate: [DefaultGuard]
   }
 ];
 
 @NgModule({
-    imports: [
-      CommonModule,
-      BrowserModule,
-      RouterModule.forRoot(routes)
-    ],
-    exports: [
-      RouterModule
-    ],
-  })
-  export class AppRoutingModule { }
+  imports: [
+    CommonModule,
+    BrowserModule,
+    RouterModule.forRoot(routes)
+  ],
+  exports: [
+    RouterModule
+  ],
+})
+export class AppRoutingModule { }

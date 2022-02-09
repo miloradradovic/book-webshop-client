@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthenticatedModel } from 'src/app/model/login.model';

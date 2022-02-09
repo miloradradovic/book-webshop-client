@@ -1,4 +1,3 @@
-import { ThisReceiver } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -7,6 +6,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Book, BookCatalogData } from 'src/app/model/book.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CatalogService } from 'src/app/services/catalog.service';
+import { PhotoService } from 'src/app/services/photo.service';
 import { RefreshTokenComponent } from 'src/app/shared/refresh-token/refresh-token.component';
 import { DetailedBookComponent } from './detailed-book/detailed-book.component';
 
@@ -25,7 +25,8 @@ export class CatalogDashboardComponent implements OnInit {
     private snackBar: MatSnackBar,
     private router: Router,
     public dialog: MatDialog,
-    private spinnerService: NgxSpinnerService
+    private spinnerService: NgxSpinnerService,
+    private photoService: PhotoService
   ) { }
 
   ngOnInit(): void {
@@ -73,6 +74,7 @@ export class CatalogDashboardComponent implements OnInit {
           );
         });
         this.booksCatalog = forCatalog;
+        this.getPictures();
         this.spinnerService.hide();
       },
       error: (err) => {
@@ -93,6 +95,22 @@ export class CatalogDashboardComponent implements OnInit {
         }
       },
     });
+  }
+
+  getPictures(): void {
+    let booksWithPhotos: BookCatalogData[] = [];
+    this.booksCatalog.forEach(book => {
+      this.photoService.getByName(book.name).subscribe({
+        next: (result) => {
+          book.photo = 'data:image/png;base64,' + result.name;
+          booksWithPhotos.push(book);
+        },
+        error: (err) => {
+          this.snackBar.open(err.error, 'Ok', { duration: 3000 });
+        }
+      })
+      this.booksCatalog = booksWithPhotos;
+    })
   }
 
   viewDetails(bookId: number) {
