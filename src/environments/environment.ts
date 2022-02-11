@@ -5,7 +5,6 @@
 export const environment = {
   production: false,
   gatewayUrl: "http://localhost:8072",
-  indexPageUrl: "http://localhost:4200",
   photoServiceUrl: "http://localhost:8085"
 };
 
