@@ -1,0 +1,57 @@
+<h1 class="mat-display-1;" style="text-align: center;  margin-top: 1%;">Your cart</h1>
+<mat-divider></mat-divider>
+
+<div style="float: left; padding-top: 2%; padding-left: 2%;">
+  <app-cart-items [cartItems]="cartItems" (lower)="lower($event)" (grow)="grow($event)">
+  </app-cart-items>
+</div>
+
+<div style="float: right; padding-right: 10%; padding-top: 3%; width: 50%;">
+  <mat-horizontal-stepper (selectionChange)="changedMatStep($event)" linear>
+    <mat-step [stepControl]="form">
+      <mat-slide-toggle (toggleChange)="toggleChange()" [checked]="toggleChecked">Use default info</mat-slide-toggle>
+      <form [formGroup]="form">
+        <ng-template matStepLabel>Delivery information</ng-template>
+        <div [hidden]="toggleChecked" style="padding-top: 3%;">
+          <mat-form-field appearance="outline" style="display: block">
+            <mat-label>Address</mat-label>
+            <input [formControl]="$any(form).controls.address" id="address" matInput name="address"
+              placeholder="address...">
+            <mat-error
+              *ngIf="$any(form).controls['address'].touched && $any(form).controls['address'].errors?.['required']">
+              Address is required!
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" style="display: block">
+            <mat-label> Phone number</mat-label>
+            <input [formControl]="$any(form).controls.phoneNumber" id="phoneNumber" matInput name="phoneNumber"
+              placeholder="phone...">
+            <mat-error
+              *ngIf="$any(form).controls['phoneNumber'].touched && $any(form).controls['phoneNumber'].errors?.['required']">
+              Phone number is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div style="padding-top: 3%; float: right;">
+          <button [disabled]="form.invalid && !toggleChecked" mat-button matStepperNext>Next
+          </button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Summary</ng-template>
+      <p style="font-size: medium;">Final price: {{finalPrice}} RSD</p>
+      <p>Your order will be placed right after you click the 'Order' button.</p>
+      <br>
+      <div style="float: left">
+        <button mat-button matStepperPrevious>Previous</button>
+      </div>
+      <div style="float: right;">
+        <button mat-button (click)="placeOrder()">Place the order</button>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
+</div>
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" color="#fff" size="medium" type="ball-atom">
+</ngx-spinner>

@@ -1,0 +1,20 @@
+<mat-card>
+  <mat-card-title-group>
+    <mat-card-title style="font-size: medium;">{{book.name}}</mat-card-title>
+    <mat-card-subtitle style="font-size: small;">
+      Written by: {{book.writers}}
+      <br>
+      Genres: {{book.genres}}
+      <br>
+      Released in: {{book.yearReleased}}
+    </mat-card-subtitle>
+    <img mat-card-sm-image [src]='book.photo'>
+  </mat-card-title-group>
+  <mat-card-content style="font-size: small;">
+    {{book.recap}}
+  </mat-card-content>
+  <mat-card-content>
+    <button color="accent" id="details-button" mat-raised-button (click)="viewDetails(book.id)">View details
+    </button>
+  </mat-card-content>
+</mat-card>
